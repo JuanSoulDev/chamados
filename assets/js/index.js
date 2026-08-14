@@ -155,13 +155,13 @@ async function listarChamados() {
         Chart.getChart('chart-evolucao-mes')?.destroy();
         Chart.getChart('chart-chamados-abertos')?.destroy();
         Chart.getChart('chart-abas')?.destroy();
-        Chart.getChart('chart-do-dia')?.destroy();
 
         // CONSTANTES
         const quantidadeMeses = Defaults.anoAtual > anoSelecionado ? 12 : Defaults.mesAtual;
         const labels = Object.values(Defaults.meses).slice(1, quantidadeMeses + 1);
         const chamadosAno = Defaults.chamados.filter(chamado => chamado.ano == anoSelecionado);
         const chamadosFinalizados = chamadosAno.filter(chamado => chamado.finalizado == 1 || chamado.arquivado == 1);
+        const chamadosDesenvolvimento = Defaults.chamados.filter(ch => !ch.arquivado && ch.aba == "Desenvolvimento");
 
         // DADOS AGRUPADOS
         const chamadosPorMes = Object.groupBy(chamadosAno, chamado => chamado.mes);
@@ -312,7 +312,6 @@ async function listarChamados() {
             }
         ];
 
-
         new Chart(document.getElementById('chart-abas'), {
             type: 'bar',
             data: {
@@ -352,6 +351,18 @@ async function listarChamados() {
             }
         });
 
+        $(`#tabela-chamados-em-desenvolvimento tbody`).empty();
+        for (let cd of chamadosDesenvolvimento) {
+            $(`#tabela-chamados-em-desenvolvimento tbody`).append(`
+                <tr>
+                    <td class="text-center">${cd.id}</td>
+                    <td class="text-center">${cd.data_criacao_card}</td>
+                    <td class="text-center">${cd.titulo_card}</td>
+                    <td class="fw-semibold">${cd.participantes}</td>
+                </tr> 
+            `);
+        }
+
         $("#ultima-atualizado").html(new Date().toLocaleString('pt-BR').replace(',', ''));
     } catch(e) {
         console.log(e);
@@ -363,6 +374,8 @@ async function listarChamados() {
 async function listarQuantitativos() {
      try {
         NProgress.start();
+
+        Chart.getChart('chart-do-dia')?.destroy();
 
         const anoSelecionado = $("#ano-select").val();
         const mesSelecionado = $("#mes-select").val();

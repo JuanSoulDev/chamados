@@ -786,7 +786,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-xl-12">
+            <div class="col-12 col-xl-7">
                 <div class="dashboard-card">
                     <div class="dashboard-card-header">
                         <div>
@@ -799,6 +799,33 @@
                     <div class="dashboard-card-body">
                         <div class="chart-container-small">
                             <canvas id="chart-do-dia"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-xl-5">
+                <div class="dashboard-card">
+                    <div class="dashboard-card-header">
+                        <div>
+                            <h2 class="dashboard-card-title">
+                                <i class="bi bi-pie-chart me-2"></i>Desenvolvimento
+                            </h2>
+                            <div class="dashboard-card-subtitle">Listagem de chamados que estão em desenvolvimento</div>
+                        </div>
+                    </div>
+                    <div class="dashboard-card-body">
+                        <div style="max-height: 300px; overflow: auto;">
+                            <table id="tabela-chamados-em-desenvolvimento" class="table dashboard-table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Id</th>
+                                        <th class="text-center">Criação</th>
+                                        <th class="text-center">Título</th>
+                                        <th>Participantes</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

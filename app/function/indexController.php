@@ -78,6 +78,8 @@ function listarChamados() {
 
             SELECT
                 c.id,
+                c.title AS titulo_card,
+                TO_CHAR(FROM_UNIXTIME(c.created_at), 'DD/MM/YYYY') AS data_criacao_card,
                 s.title AS aba,
                 c.archived AS arquivado,
                 s.title IN ('Revisão', 'Finalizado', 'Sincronização') AS finalizado,
@@ -105,7 +107,16 @@ function listarChamados() {
                 COALESCE(li.e_implementacao, FALSE) AS e_implementacao,
                 COALESCE(li.e_suporte, FALSE) AS e_suporte,
                 YEAR(FROM_UNIXTIME(c.created_at)) AS ano, 
-                MONTH(FROM_UNIXTIME(c.created_at)) AS mes
+                MONTH(FROM_UNIXTIME(c.created_at)) AS mes,
+                (
+                    SELECT
+                        GROUP_CONCAT(u.displayname SEPARATOR ', ')
+                    FROM
+                        oc_deck_assigned_users au
+                    JOIN oc_users u ON u.uid = au.participant
+                    WHERE
+                        au.card_id = c.id
+                ) AS participantes
             FROM
                 oc_deck_boards b
             CROSS JOIN (
@@ -162,172 +173,167 @@ function listarQuantitativos() {
 
         $select = $conn->prepare(<<<SQL
             SELECT
-                inf.*,
-                TRUNCATE(((inf.finalizados * 100) / inf.acumulados), 1) AS percentual
-            FROM (
-                SELECT
-                    uc.category AS categoria,
-                    u.uid AS id_usuario,
-                    u.displayname AS nome_usuario,
-                    cu.active AS usuario_ativo,
-                    COUNT(*) AS acumulados,
-                    COUNT(
-                        CASE
-                            WHEN 
+                uc.category AS categoria,
+                u.uid AS id_usuario,
+                u.displayname AS nome_usuario,
+                cu.active AS usuario_ativo,
+                COUNT(*) AS acumulados,
+                COUNT(
+                    CASE
+                        WHEN 
+                            s.title IN ('Revisão', 'Finalizado', 'Sincronização')
+                            OR c.archived = 1
+                        THEN c.id
+                    END
+                ) AS finalizados,
+                COUNT(
+                    CASE
+                        WHEN 
+                            s.title IN ('Desenvolvimento', 'Chamados', 'Reajuste', 'Pause', 'Analise', 'Sprint Semanal', 'Implementações')
+                            AND c.archived = 0
+                        THEN
+                            c.id
+                    END
+                ) AS abertos,
+                COUNT(
+                    CASE
+                        WHEN
+                            (
+                                (YEAR(FROM_UNIXTIME(c.created_at)) = sp.ano)
+                                AND (
+                                    sp.mes = 0 
+                                    OR MONTH(FROM_UNIXTIME(c.created_at)) = sp.mes
+                                )
+                                AND (
+                                    sp.titulo = 0
+                                    OR EXISTS (
+                                        SELECT
+                                            1
+                                        FROM
+                                            oc_deck_assigned_labels l
+                                        WHERE
+                                            l.card_id = c.id
+                                            AND l.label_id = sp.titulo
+                                    )
+                                )
+                            )
+                        THEN
+                            c.id
+                    END
+                ) AS acumulados_filtrados,
+                COUNT(
+                    CASE
+                        WHEN 
+                            (
                                 s.title IN ('Revisão', 'Finalizado', 'Sincronização')
                                 OR c.archived = 1
-                            THEN c.id
-                        END
-                    ) AS finalizados,
-                    COUNT(
-                        CASE
-                            WHEN 
-                                s.title IN ('Desenvolvimento', 'Chamados', 'Reajuste', 'Pause', 'Analise', 'Sprint Semanal', 'Implementações')
-                                AND c.archived = 0
-                            THEN
-                                c.id
-                        END
-                    ) AS abertos,
-                    COUNT(
-                        CASE
-                            WHEN
-                                (
-                                    (YEAR(FROM_UNIXTIME(c.created_at)) = sp.ano)
-                                    AND (
-                                        sp.mes = 0 
-                                        OR MONTH(FROM_UNIXTIME(c.created_at)) = sp.mes
-                                    )
-                                    AND (
-                                        sp.titulo = 0
-                                        OR EXISTS (
-                                            SELECT
-                                                1
-                                            FROM
-                                                oc_deck_assigned_labels l
-                                            WHERE
-                                                l.card_id = c.id
-                                                AND l.label_id = sp.titulo
-                                        )
-                                    )
-                                )
-                            THEN
-                                c.id
-                        END
-                    ) AS acumulados_filtrados,
-                    COUNT(
-                        CASE
-                            WHEN 
-                                (
-                                    s.title IN ('Revisão', 'Finalizado', 'Sincronização')
-                                    OR c.archived = 1
+                            )
+                            AND (
+                                (YEAR(FROM_UNIXTIME(c.created_at)) = sp.ano)
+                                AND (
+                                    sp.mes = 0 
+                                    OR MONTH(FROM_UNIXTIME(c.created_at)) = sp.mes
                                 )
                                 AND (
-                                    (YEAR(FROM_UNIXTIME(c.created_at)) = sp.ano)
-                                    AND (
-                                        sp.mes = 0 
-                                        OR MONTH(FROM_UNIXTIME(c.created_at)) = sp.mes
-                                    )
-                                    AND (
-                                        sp.titulo = 0
-                                        OR EXISTS (
-                                            SELECT
-                                                1
-                                            FROM
-                                                oc_deck_assigned_labels l
-                                            WHERE
-                                                l.card_id = c.id
-                                                AND l.label_id = sp.titulo
-                                        )
+                                    sp.titulo = 0
+                                    OR EXISTS (
+                                        SELECT
+                                            1
+                                        FROM
+                                            oc_deck_assigned_labels l
+                                        WHERE
+                                            l.card_id = c.id
+                                            AND l.label_id = sp.titulo
                                     )
                                 )
-                                
-                            THEN c.id
-                        END
-                    ) AS finalizados_filtrados,
-                    COUNT(
-                        CASE
-                            WHEN 
-                                (
-                                    s.title IN ('Revisão', 'Finalizado', 'Sincronização')
-                                    OR c.archived = 1
-                                )
-                                AND DATE(FROM_UNIXTIME(c.created_at)) = CURDATE()
-                            THEN c.id
-                        END
-                    ) AS finalizados_do_dia,
-                    COUNT(
-                        CASE
-                            WHEN 
-                                s.title IN ('Desenvolvimento', 'Chamados', 'Reajuste', 'Pause', 'Analise', 'Sprint Semanal', 'Implementações')
-                                AND c.archived = 0
+                            )
+                            
+                        THEN c.id
+                    END
+                ) AS finalizados_filtrados,
+                COUNT(
+                    CASE
+                        WHEN 
+                            (
+                                s.title IN ('Revisão', 'Finalizado', 'Sincronização')
+                                OR c.archived = 1
+                            )
+                            AND DATE(FROM_UNIXTIME(c.created_at)) = CURDATE()
+                        THEN c.id
+                    END
+                ) AS finalizados_do_dia,
+                COUNT(
+                    CASE
+                        WHEN 
+                            s.title IN ('Desenvolvimento', 'Chamados', 'Reajuste', 'Pause', 'Analise', 'Sprint Semanal', 'Implementações')
+                            AND c.archived = 0
+                            AND (
+                                (YEAR(FROM_UNIXTIME(c.created_at)) = sp.ano)
                                 AND (
-                                    (YEAR(FROM_UNIXTIME(c.created_at)) = sp.ano)
-                                    AND (
-                                        sp.mes = 0 
-                                        OR MONTH(FROM_UNIXTIME(c.created_at)) = sp.mes
-                                    )
-                                    AND (
-                                        sp.titulo = 0
-                                        OR EXISTS (
-                                            SELECT
-                                                1
-                                            FROM
-                                                oc_deck_assigned_labels l
-                                            WHERE
-                                                l.card_id = c.id
-                                                AND l.label_id = sp.titulo
-                                        )
+                                    sp.mes = 0 
+                                    OR MONTH(FROM_UNIXTIME(c.created_at)) = sp.mes
+                                )
+                                AND (
+                                    sp.titulo = 0
+                                    OR EXISTS (
+                                        SELECT
+                                            1
+                                        FROM
+                                            oc_deck_assigned_labels l
+                                        WHERE
+                                            l.card_id = c.id
+                                            AND l.label_id = sp.titulo
                                     )
                                 )
-                            THEN
-                                c.id
-                        END
-                    ) AS abertos_filtrados,
-                    COUNT(
-                        CASE
-                            WHEN 
-                                s.title = 'Desenvolvimento' 
-                            THEN
-                                c.id
-                        END
-                    ) AS desenvolvimento
-                FROM
-                    user_category uc
-                JOIN oc_deck_category_user cu ON cu.id_category = uc.id
-                JOIN oc_users u ON u.uid = cu.uid_user
-                JOIN oc_deck_assigned_users au ON au.participant = u.uid
-                JOIN oc_deck_cards c 
-                    ON c.id = au.card_id
-                    AND (
-                        c.deleted_at IS NULL
-                        OR c.deleted_at = 0
-                    )
-                JOIN oc_deck_stacks s 
-                    ON s.id = c.stack_id
-                    AND (
-                        s.deleted_at IS NULL
-                        OR s.deleted_at = 0
-                    )
-                JOIN oc_deck_boards b 
-                    ON b.id = s.board_id
-                    AND b.id = 12
-                    AND (
-                        b.deleted_at IS NULL
-                        OR b.deleted_at = 0
-                    )
-                CROSS JOIN (
-                    SELECT
-                        ? AS ano,
-                        ? AS mes,
-                        ? AS titulo
-                ) sp
-                WHERE
-                    uc.category IN('SUPORTE', 'DESENVOLVIMENTO')
-                GROUP BY
-                    id_usuario
-                ORDER BY
-                    categoria, acumulados DESC, finalizados ASC
-            ) inf
+                            )
+                        THEN
+                            c.id
+                    END
+                ) AS abertos_filtrados,
+                COUNT(
+                    CASE
+                        WHEN 
+                            s.title = 'Desenvolvimento' 
+                        THEN
+                            c.id
+                    END
+                ) AS desenvolvimento
+            FROM
+                user_category uc
+            JOIN oc_deck_category_user cu ON cu.id_category = uc.id
+            JOIN oc_users u ON u.uid = cu.uid_user
+            JOIN oc_deck_assigned_users au ON au.participant = u.uid
+            JOIN oc_deck_cards c 
+                ON c.id = au.card_id
+                AND (
+                    c.deleted_at IS NULL
+                    OR c.deleted_at = 0
+                )
+            JOIN oc_deck_stacks s 
+                ON s.id = c.stack_id
+                AND (
+                    s.deleted_at IS NULL
+                    OR s.deleted_at = 0
+                )
+            JOIN oc_deck_boards b 
+                ON b.id = s.board_id
+                AND b.id = 12
+                AND (
+                    b.deleted_at IS NULL
+                    OR b.deleted_at = 0
+                )
+            CROSS JOIN (
+                SELECT
+                    ? AS ano,
+                    ? AS mes,
+                    ? AS titulo
+            ) sp
+            WHERE
+                uc.category IN('SUPORTE', 'DESENVOLVIMENTO')
+            GROUP BY
+                id_usuario
+            ORDER BY
+                categoria, acumulados DESC, finalizados ASC
         SQL);
         $select->bind_param("iii", $ano, $mes, $titulo);
         $select->execute();
