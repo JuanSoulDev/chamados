@@ -687,7 +687,7 @@
                         <span class="kpi-period">
                             Filtrados: <strong id="qtd-criados-filtrados"></strong>
                         </span>
-                        <span class="text-primary fw-semibold">período</span>
+                        <span class="text-primary fw-semibold">acumulados</span>
                     </div>
                 </div>
             </div>
@@ -824,7 +824,7 @@
                                 <tr>
                                     <th rowspan="2" class="text-center align-middle border">Colaborador</th>
                                     <th colspan="3" class="text-center border">Acumulados</th>
-                                    <th colspan="3" class="text-center border">Período</th>
+                                    <th colspan="3" class="text-center border">Filtrados</th>
                                     <th rowspan="2" class="text-center border align-middle">Desenvolvimento
                                     </th>
                                 </tr>
@@ -871,7 +871,7 @@
                                 <tr>
                                     <th rowspan="2" class="text-center align-middle border">Colaborador</th>
                                     <th colspan="3" class="text-center border">Acumulados</th>
-                                    <th colspan="3" class="text-center border">Período</th>
+                                    <th colspan="3" class="text-center border">Filtrados</th>
                                     <th rowspan="2" class="text-center border align-middle">Desenvolvimento
                                     </th>
                                 </tr>
