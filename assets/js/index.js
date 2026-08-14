@@ -29,7 +29,8 @@ $(document).ready(async function() {
             listarMeses(),
             listarTitulos(),
             listarChamados(),
-            listarQuantitativos()
+            listarQuantitativos(),
+            listarDeck()
         ]);
 
         setInterval(listarChamados, 60000);
@@ -475,6 +476,20 @@ async function listarQuantitativos() {
     }
 }
 
+async function listarDeck() {
+     try {
+        const params = { 
+            s: 4
+        };
+
+        eval((await requisicaoPadrao(params)).p1);
+    } catch(e) {
+        console.log(e);
+    } finally {
+        NProgress.done();
+    }
+}
+
 $(document).on("click", ".coroa, .caveira", function () {
     for (let i = 0; i < 3; i++) {
         const ai = $("<span class='ai'>Ui</span>");
@@ -490,6 +505,3 @@ $(document).on("click", ".coroa, .caveira", function () {
         });
     }
 });
-
-let etapa1 = 0; document.addEventListener("keydown", (e) => { const key = e.key.toLowerCase(); if (etapa1 === 0 && key === "control") { etapa1 = 1;} else if (etapa1 === 1 && key === "r") {    etapa1 = 2;} else if (etapa1 === 2 && key === "m") {  $("body").prepend(`<img src="assets/msc/m.jpeg" id="jumpscare"><audio id="fah"> <source src="assets/msc/fahhh_KcgAXfs.mp3" type="audio/mpeg"></audio>`); document.querySelector("audio#fah").play();     document.getElementById("jumpscare").classList.add("mostrar");    setTimeout(() => {   document.getElementById("jumpscare").classList.remove("mostrar"); }, 125); setTimeout(() => { $("#jumpscare").eq(0).remove(); $("#fah").eq(0).remove(); }, 2000);   etapa1 = 0;} else {    etapa1 = 0;}});
-let etapa2 = 0; document.addEventListener("keydown", (e) => { const key = e.key.toLowerCase(); if (etapa2 === 0 && key === "control") { etapa2 = 1;} else if (etapa2 === 1 && key === "j") {    etapa2 = 2;} else if (etapa2 === 2 && key === "p") {  $("body").prepend(`<img src="assets/msc/j.png" id="jumpscare"><audio id="fah"> <source src="assets/msc/fahhh_KcgAXfs.mp3" type="audio/mpeg"></audio>`); document.querySelector("audio#fah").play();     document.getElementById("jumpscare").classList.add("mostrar");    setTimeout(() => {   document.getElementById("jumpscare").classList.remove("mostrar"); }, 125); setTimeout(() => { $("#jumpscare").eq(0).remove(); $("#fah").eq(0).remove(); }, 2000);   etapa2 = 0;} else {    etapa2 = 0;}});
