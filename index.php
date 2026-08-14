@@ -791,6 +791,23 @@
                     <div class="dashboard-card-header">
                         <div>
                             <h2 class="dashboard-card-title">
+                                <i class="bi bi-pie-chart me-2"></i>Ranking do Dia
+                            </h2>
+                            <div class="dashboard-card-subtitle">Programadores com mais chamados finalizados do dia</div>
+                        </div>
+                    </div>
+                    <div class="dashboard-card-body">
+                        <div class="chart-container-small">
+                            <canvas id="chart-do-dia"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-xl-12">
+                <div class="dashboard-card">
+                    <div class="dashboard-card-header">
+                        <div>
+                            <h2 class="dashboard-card-title">
                                 <i class="bi bi-pie-chart me-2"></i>Chamados por aba
                             </h2>
                             <div class="dashboard-card-subtitle">Quantitativo dos chamados que ainda não foram arquivados</div>

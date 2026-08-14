@@ -155,6 +155,7 @@ async function listarChamados() {
         Chart.getChart('chart-evolucao-mes')?.destroy();
         Chart.getChart('chart-chamados-abertos')?.destroy();
         Chart.getChart('chart-abas')?.destroy();
+        Chart.getChart('chart-do-dia')?.destroy();
 
         // CONSTANTES
         const quantidadeMeses = Defaults.anoAtual > anoSelecionado ? 12 : Defaults.mesAtual;
@@ -178,7 +179,7 @@ async function listarChamados() {
         );
 
         $("#ano-grafico-evolucao").html(anoSelecionado);
-        const chartEvolucao = new Chart(document.getElementById('chart-evolucao-mes'), {
+        new Chart(document.getElementById('chart-evolucao-mes'), {
             type: 'line',
             data: {
                 labels: labels,
@@ -235,7 +236,7 @@ async function listarChamados() {
             }
         });
 
-        const chartSituacao = new Chart(document.getElementById('chart-chamados-abertos'), {
+        new Chart(document.getElementById('chart-chamados-abertos'), {
             type: 'doughnut',
             data: {
                 labels: [
@@ -286,6 +287,10 @@ async function listarChamados() {
                 cor: '#7209b7'
             },
             {
+                descricao: 'Desenvolvimento',
+                cor: '#2fe0ff'
+            },
+            {
                 descricao: 'Pause',
                 cor: '#f8961e'
             },
@@ -308,7 +313,7 @@ async function listarChamados() {
         ];
 
 
-        const chartColaboradores = new Chart(document.getElementById('chart-abas'), {
+        new Chart(document.getElementById('chart-abas'), {
             type: 'bar',
             data: {
                 labels: abas.map((e) => e.descricao),
@@ -371,6 +376,53 @@ async function listarQuantitativos() {
         };
 
         Defaults.quantitativos = (await requisicaoPadrao(params)).p1;
+
+        let chamadosFinalizadosDoDia = Defaults.quantitativos
+            .filter(q => q.finalizados_do_dia > 0 && q.categoria == "DESENVOLVIMENTO")
+            .sort((a, b) => (b.finalizados_do_dia - a.finalizados_do_dia) || a.nome_usuario.localeCompare(b.nome_usuario));
+        
+        new Chart(document.getElementById('chart-do-dia'), {
+            type: 'bar',
+            data: {
+                labels: chamadosFinalizadosDoDia.map((e) => e.nome_usuario),
+                datasets: [
+                    {
+                        label: 'Quantidade',
+                        data: chamadosFinalizadosDoDia.map((e) => e.finalizados_do_dia),
+                        backgroundColor: "#4361ee",
+                        borderRadius: 7,
+                        borderSkipped: true
+                    }
+                ]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: (chamadosFinalizadosDoDia[0].finalizados_do_dia) * 2,
+                        ticks: {
+                            stepSize: 1
+                        },
+                        grid: {
+                            color: '#f0f1f3'
+                        }
+                    },
+                    y: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
         
         const programacao = Defaults.quantitativos.filter(q => q.categoria == 'DESENVOLVIMENTO');
         const suporte = Defaults.quantitativos.filter(q => q.categoria == 'SUPORTE');

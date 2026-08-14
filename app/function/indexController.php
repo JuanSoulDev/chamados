@@ -174,7 +174,7 @@ function listarQuantitativos() {
                     COUNT(
                         CASE
                             WHEN 
-                                s.title IN ('Revisão', 'Finalizado', 'Sincronização ')
+                                s.title IN ('Revisão', 'Finalizado', 'Sincronização')
                                 OR c.archived = 1
                             THEN c.id
                         END
@@ -218,7 +218,7 @@ function listarQuantitativos() {
                         CASE
                             WHEN 
                                 (
-                                    s.title IN ('Revisão', 'Finalizado', 'Sincronização ')
+                                    s.title IN ('Revisão', 'Finalizado', 'Sincronização')
                                     OR c.archived = 1
                                 )
                                 AND (
@@ -244,6 +244,17 @@ function listarQuantitativos() {
                             THEN c.id
                         END
                     ) AS finalizados_filtrados,
+                    COUNT(
+                        CASE
+                            WHEN 
+                                (
+                                    s.title IN ('Revisão', 'Finalizado', 'Sincronização')
+                                    OR c.archived = 1
+                                )
+                                AND DATE(FROM_UNIXTIME(c.created_at)) = CURDATE()
+                            THEN c.id
+                        END
+                    ) AS finalizados_do_dia,
                     COUNT(
                         CASE
                             WHEN 
