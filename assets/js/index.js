@@ -241,9 +241,9 @@ async function listarChamados() {
             type: 'doughnut',
             data: {
                 labels: [
-                    'Implementação',
-                    'Suporte',
-                    'Sem Tag'
+                    'Novidades',
+                    'Erros',
+                    'Não informado'
                 ],
                 datasets: [
                     {
@@ -527,7 +527,7 @@ function chartValoresExplicitos(chart) {
     chart.data.datasets[0].data.forEach((valor, i) => {
         const elemento = meta.data[i];
 
-        if (!elemento) return;
+        if (!elemento || !chart.getDataVisibility(i)) return;
 
         ctx.fillStyle = '#fff';
         ctx.font = 'bold 16px Arial';
