@@ -267,6 +267,23 @@ function listarQuantitativos() {
                 ) AS finalizados_do_dia,
                 COUNT(
                     CASE
+                        WHEN (
+                            s.title IN ('Revisão', 'Finalizado', 'Sincronização')
+                            OR c.archived = 1
+                        )
+                        AND DATE(FROM_UNIXTIME(c.created_at))
+                            BETWEEN
+                                DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)
+                                AND
+                                DATE_ADD(
+                                    DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY),
+                                    INTERVAL 6 DAY
+                                )
+                        THEN c.id
+                    END
+                ) AS finalizados_da_semana,
+                COUNT(
+                    CASE
                         WHEN 
                             s.title IN ('Desenvolvimento', 'Chamados', 'Reajuste', 'Pause', 'Analise', 'Sprint Semanal', 'Implementações')
                             AND c.archived = 0

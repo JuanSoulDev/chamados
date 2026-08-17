@@ -403,19 +403,19 @@ async function listarQuantitativos() {
 
         Defaults.quantitativos = (await requisicaoPadrao(params)).p1;
 
-        let chamadosFinalizadosDoDia = Defaults.quantitativos
-            .filter(q => q.finalizados_do_dia > 0 && q.categoria == "DESENVOLVIMENTO")
-            .sort((a, b) => (b.finalizados_do_dia - a.finalizados_do_dia) || a.nome_usuario.localeCompare(b.nome_usuario));
+        let chamadosFinalizadosDaSemana = Defaults.quantitativos
+            .filter(q => q.finalizados_da_semana > 0 && q.categoria == "DESENVOLVIMENTO")
+            .sort((a, b) => (b.finalizados_da_semana - a.finalizados_da_semana) || a.nome_usuario.localeCompare(b.nome_usuario));
         
-        if(chamadosFinalizadosDoDia.length) {
+        if(chamadosFinalizadosDaSemana.length) {
             new Chart(document.getElementById('chart-do-dia'), {
                 type: 'bar',
                 data: {
-                    labels: chamadosFinalizadosDoDia.map((e) => e.nome_usuario),
+                    labels: chamadosFinalizadosDaSemana.map((e) => e.nome_usuario),
                     datasets: [
                         {
                             label: 'Quantidade',
-                            data: chamadosFinalizadosDoDia.map((e) => e.finalizados_do_dia),
+                            data: chamadosFinalizadosDaSemana.map((e) => e.finalizados_da_semana),
                             backgroundColor: "#4361ee",
                             borderRadius: 7,
                             borderSkipped: true
@@ -434,7 +434,7 @@ async function listarQuantitativos() {
                     scales: {
                         x: {
                             beginAtZero: true,
-                            max: (chamadosFinalizadosDoDia[0].finalizados_do_dia) * 2,
+                            max: Math.ceil((chamadosFinalizadosDaSemana[0].finalizados_da_semana) * 1.2),
                             ticks: {
                                 stepSize: 1
                             },
@@ -448,7 +448,13 @@ async function listarQuantitativos() {
                             }
                         }
                     }
-                }
+                },
+                plugins: [{
+                    id: 'valores',
+                    afterDatasetsDraw(chart) {
+                        chartValoresExplicitos(chart);
+                    }
+                }]
             });
         }
         
@@ -528,28 +534,32 @@ function chartValoresExplicitos(chart) {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
-        // GRÁFICO DE COLUNAS
+        // GRÁFICO DE BARRAS
         if (chart.config.type === 'bar') {
-            const x = elemento.x;
-            const y = (elemento.y + elemento.base) / 2;
 
-            ctx.fillText(valor, x, y);
+            // BARRA HORIZONTAL
+            if (chart.options.indexAxis === 'y') {
+                const x = (elemento.x + elemento.base) / 2;
+                const y = elemento.y;
+
+                ctx.fillText(valor, x, y);
+            }
+
+            // BARRA VERTICAL
+            else {
+                const x = elemento.x;
+                const y = (elemento.y + elemento.base) / 2;
+
+                ctx.fillText(valor, x, y);
+            }
         }
-
         // GRÁFICO DE PIZZA / DOUGHNUT
-        else if (
-            chart.config.type === 'pie' ||
-            chart.config.type === 'doughnut'
-        ) {
+        else if (chart.config.type === 'pie' || chart.config.type === 'doughnut') {
             const angle = (elemento.startAngle + elemento.endAngle) / 2;
 
-            const x = elemento.x +
-                Math.cos(angle) *
-                (elemento.outerRadius + elemento.innerRadius) / 2;
+            const x = elemento.x + Math.cos(angle) * (elemento.outerRadius + elemento.innerRadius) / 2;
 
-            const y = elemento.y +
-                Math.sin(angle) *
-                (elemento.outerRadius + elemento.innerRadius) / 2;
+            const y = elemento.y + Math.sin(angle) * (elemento.outerRadius + elemento.innerRadius) / 2;
 
             ctx.fillText(valor, x, y);
         }
