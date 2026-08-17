@@ -405,7 +405,7 @@ async function listarQuantitativos() {
 
         let chamadosFinalizadosDaSemana = Defaults.quantitativos
             .filter(q =>  q.categoria == "DESENVOLVIMENTO" && (q.finalizados_da_semana > 0 || q.abertos_da_semana > 0))
-            .sort((a, b) => ((b.finalizados_da_semana + b.abertos_da_semana) - (a.finalizados_da_semana + a.abertos_da_semana)) || a.nome_usuario.localeCompare(b.nome_usuario));
+            .sort((a, b) => ((b.finalizados_da_semana + b.abertos_da_semana) - (a.finalizados_da_semana + a.abertos_da_semana)) || (b.finalizados_da_semana - a.finalizados_da_semana) || a.nome_usuario.localeCompare(b.nome_usuario));
  
         if(chamadosFinalizadosDaSemana.length) {
             new Chart(document.getElementById('chart-do-dia'), {
