@@ -654,7 +654,7 @@
                 </div>
                 <div class="col-6 col-lg-2">
                     <label for="mes-select" class="form-label">Mês</label>
-                    <select id="mes-select" class="form-select"></select>
+                    <select id="mes-select" ondblclick="setarMesAtual()" class="form-select"></select>
                 </div>
                 <div class="col-12 col-lg">
                     <label for="titulo-select" class="form-label">Município / Título</label>
@@ -778,6 +778,7 @@
                             </h2>
                             <div class="dashboard-card-subtitle">Distinção dos chamados em aberto</div>
                         </div>
+                        <span class="status-badge badge-info">Geral</span>
                     </div>
                     <div class="dashboard-card-body">
                         <div class="chart-container-small">
@@ -791,10 +792,11 @@
                     <div class="dashboard-card-header">
                         <div>
                             <h2 class="dashboard-card-title">
-                                <i class="bi bi-bar-chart-steps me-2"></i>Ranking do Dia
+                                <i class="bi bi-bar-chart-steps me-2"></i>Ranking Diário
                             </h2>
-                            <div class="dashboard-card-subtitle">Programadores com mais chamados finalizados do dia</div>
+                            <div class="dashboard-card-subtitle">Programadores com mais chamados finalizados</div>
                         </div>
+                        <span class="status-badge badge-info">Dia</span>
                     </div>
                     <div class="dashboard-card-body">
                         <div class="chart-container-small">
@@ -808,10 +810,11 @@
                     <div class="dashboard-card-header">
                         <div>
                             <h2 class="dashboard-card-title">
-                                <i class="bi bi-pie-chart me-2"></i>Desenvolvimento
+                                <i class="bi bi-clock-history me-2"></i>Desenvolvimento
                             </h2>
                             <div class="dashboard-card-subtitle">Listagem de chamados que estão em desenvolvimento</div>
                         </div>
+                        <span class="status-badge badge-info">Geral</span>
                     </div>
                     <div class="dashboard-card-body">
                         <div style="max-height: 300px; overflow: auto;">
@@ -839,6 +842,7 @@
                             </h2>
                             <div class="dashboard-card-subtitle">Quantitativo dos chamados que ainda não foram arquivados</div>
                         </div>
+                        <span class="status-badge badge-info">Geral</span>
                     </div>
                     <div class="dashboard-card-body">
                         <div class="chart-container-small">

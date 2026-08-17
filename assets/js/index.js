@@ -395,48 +395,50 @@ async function listarQuantitativos() {
             .filter(q => q.finalizados_do_dia > 0 && q.categoria == "DESENVOLVIMENTO")
             .sort((a, b) => (b.finalizados_do_dia - a.finalizados_do_dia) || a.nome_usuario.localeCompare(b.nome_usuario));
         
-        new Chart(document.getElementById('chart-do-dia'), {
-            type: 'bar',
-            data: {
-                labels: chamadosFinalizadosDoDia.map((e) => e.nome_usuario),
-                datasets: [
-                    {
-                        label: 'Quantidade',
-                        data: chamadosFinalizadosDoDia.map((e) => e.finalizados_do_dia),
-                        backgroundColor: "#4361ee",
-                        borderRadius: 7,
-                        borderSkipped: true
-                    }
-                ]
-            },
-            options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
+        if(chamadosFinalizadosDoDia.length) {
+            new Chart(document.getElementById('chart-do-dia'), {
+                type: 'bar',
+                data: {
+                    labels: chamadosFinalizadosDoDia.map((e) => e.nome_usuario),
+                    datasets: [
+                        {
+                            label: 'Quantidade',
+                            data: chamadosFinalizadosDoDia.map((e) => e.finalizados_do_dia),
+                            backgroundColor: "#4361ee",
+                            borderRadius: 7,
+                            borderSkipped: true
+                        }
+                    ]
                 },
-                scales: {
-                    x: {
-                        beginAtZero: true,
-                        max: (chamadosFinalizadosDoDia[0].finalizados_do_dia) * 2,
-                        ticks: {
-                            stepSize: 1
-                        },
-                        grid: {
-                            color: '#f0f1f3'
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
                         }
                     },
-                    y: {
-                        grid: {
-                            display: false
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: (chamadosFinalizadosDoDia[0].finalizados_do_dia) * 2,
+                            ticks: {
+                                stepSize: 1
+                            },
+                            grid: {
+                                color: '#f0f1f3'
+                            }
+                        },
+                        y: {
+                            grid: {
+                                display: false
+                            }
                         }
                     }
                 }
-            }
-        });
+            });
+        }
         
         const programacao = Defaults.quantitativos.filter(q => q.categoria == 'DESENVOLVIMENTO');
         const suporte = Defaults.quantitativos.filter(q => q.categoria == 'SUPORTE');
@@ -488,6 +490,14 @@ async function listarDeck() {
     } finally {
         NProgress.done();
     }
+}
+
+function setarMesAtual() {
+    let select = document.getElementById("mes-select");
+
+    if(select.value == Defaults.mesAtual) return;
+
+    select.value = Defaults.mesAtual;
 }
 
 $(document).on("click", ".coroa, .caveira", function () {
