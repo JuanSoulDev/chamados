@@ -376,7 +376,7 @@ async function listarChamados() {
             `);
         }
 
-        $("#ultima-atualizado").html(new Date().toLocaleString('pt-BR').replace(',', ''));
+        $(".ultima-atualizado").html(new Date().toLocaleString('pt-BR').replace(',', ''));
     } catch(e) {
         console.log(e);
     } finally {
@@ -404,9 +404,9 @@ async function listarQuantitativos() {
         Defaults.quantitativos = (await requisicaoPadrao(params)).p1;
 
         let chamadosFinalizadosDaSemana = Defaults.quantitativos
-            .filter(q => q.finalizados_da_semana > 0 && q.categoria == "DESENVOLVIMENTO")
-            .sort((a, b) => (b.finalizados_da_semana - a.finalizados_da_semana) || a.nome_usuario.localeCompare(b.nome_usuario));
-        
+            .filter(q =>  q.categoria == "DESENVOLVIMENTO" && (q.finalizados_da_semana > 0 || q.abertos_da_semana > 0))
+            .sort((a, b) => ((b.finalizados_da_semana + b.abertos_da_semana) - (a.finalizados_da_semana + a.abertos_da_semana)) || a.nome_usuario.localeCompare(b.nome_usuario));
+ 
         if(chamadosFinalizadosDaSemana.length) {
             new Chart(document.getElementById('chart-do-dia'), {
                 type: 'bar',
@@ -414,11 +414,18 @@ async function listarQuantitativos() {
                     labels: chamadosFinalizadosDaSemana.map((e) => e.nome_usuario),
                     datasets: [
                         {
-                            label: 'Quantidade',
+                            label: 'abertos',
+                            data: chamadosFinalizadosDaSemana.map((e) => e.abertos_da_semana),
+                            backgroundColor: "#f59f00",
+                            borderRadius: 2,
+                            barThickness: 35
+                        },
+                        {
+                            label: 'finalizados',
                             data: chamadosFinalizadosDaSemana.map((e) => e.finalizados_da_semana),
-                            backgroundColor: "#4361ee",
-                            borderRadius: 7,
-                            borderSkipped: true
+                            backgroundColor: '#43aa8b',
+                            borderRadius: 2,
+                            barThickness: 35
                         }
                     ]
                 },
@@ -433,8 +440,9 @@ async function listarQuantitativos() {
                     },
                     scales: {
                         x: {
+                            stacked: true,
                             beginAtZero: true,
-                            max: Math.ceil((chamadosFinalizadosDaSemana[0].finalizados_da_semana) * 1.2),
+                            max: Math.ceil((chamadosFinalizadosDaSemana[0].finalizados_da_semana + chamadosFinalizadosDaSemana[0].abertos_da_semana) * 1.2),
                             ticks: {
                                 stepSize: 1
                             },
@@ -443,6 +451,7 @@ async function listarQuantitativos() {
                             }
                         },
                         y: {
+                            stacked: true,
                             grid: {
                                 display: false
                             }
@@ -520,49 +529,48 @@ function setarMesAtual() {
 
 function chartValoresExplicitos(chart) {
     const { ctx } = chart;
-    const meta = chart.getDatasetMeta(0);
 
     ctx.save();
 
-    chart.data.datasets[0].data.forEach((valor, i) => {
-        const elemento = meta.data[i];
+    chart.data.datasets.forEach((dataset, datasetIndex) => {
+        const meta = chart.getDatasetMeta(datasetIndex);
 
-        if (!elemento || !chart.getDataVisibility(i)) return;
+        dataset.data.forEach((valor, i) => {
+            const elemento = meta.data[i];
 
-        ctx.fillStyle = '#fff';
-        ctx.font = 'bold 16px Arial';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
+            if (!elemento || !valor || !chart.getDataVisibility(i)) return;
 
-        // GRÁFICO DE BARRAS
-        if (chart.config.type === 'bar') {
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
 
-            // BARRA HORIZONTAL
-            if (chart.options.indexAxis === 'y') {
-                const x = (elemento.x + elemento.base) / 2;
-                const y = elemento.y;
+            if (chart.config.type === 'bar') {
+                // BARRA HORIZONTAL
+                if (chart.options.indexAxis === 'y') {
+                    const x = (elemento.x + elemento.base) / 2;
+                    const y = elemento.y;
+
+                    ctx.fillText(valor, x, y);
+                }
+                // BARRA VERTICAL
+                else {
+                    const x = elemento.x;
+                    const y = (elemento.y + elemento.base) / 2;
+
+                    ctx.fillText(valor, x, y);
+                }
+            }
+            else if (chart.config.type === 'pie' ||chart.config.type === 'doughnut') {
+                const angle = (elemento.startAngle + elemento.endAngle) / 2;
+                const raio = (elemento.outerRadius + elemento.innerRadius) / 2;
+
+                const x = elemento.x + Math.cos(angle) * raio;
+                const y = elemento.y + Math.sin(angle) * raio;
 
                 ctx.fillText(valor, x, y);
             }
-
-            // BARRA VERTICAL
-            else {
-                const x = elemento.x;
-                const y = (elemento.y + elemento.base) / 2;
-
-                ctx.fillText(valor, x, y);
-            }
-        }
-        // GRÁFICO DE PIZZA / DOUGHNUT
-        else if (chart.config.type === 'pie' || chart.config.type === 'doughnut') {
-            const angle = (elemento.startAngle + elemento.endAngle) / 2;
-
-            const x = elemento.x + Math.cos(angle) * (elemento.outerRadius + elemento.innerRadius) / 2;
-
-            const y = elemento.y + Math.sin(angle) * (elemento.outerRadius + elemento.innerRadius) / 2;
-
-            ctx.fillText(valor, x, y);
-        }
+        });
     });
 
     ctx.restore();

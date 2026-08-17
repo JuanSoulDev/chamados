@@ -956,7 +956,7 @@
             © 2026 Sicap Soluções Sistemas de Gerenciamento em Gestão Educacional
             <span>•</span>
             <span>Atualizado em:</span>
-            <span id="ultima-atualizado">Atualizado agora</span>
+            <span class="ultima-atualizado"></span>
         </footer>
     </div>
 
