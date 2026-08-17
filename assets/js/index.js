@@ -271,7 +271,13 @@ async function listarChamados() {
                         position: 'bottom'
                     }
                 }
-            }
+            },
+            plugins: [{
+                id: 'valores',
+                afterDatasetsDraw(chart) {
+                    chartValoresExplicitos(chart);
+                }
+            }]
         });
 
         const abas = [
@@ -349,7 +355,13 @@ async function listarChamados() {
                         }
                     }
                 }
-            }
+            },
+            plugins: [{
+                id: 'valores',
+                afterDatasetsDraw(chart) {
+                    chartValoresExplicitos(chart);
+                }
+            }]
         });
 
         $(`#tabela-chamados-em-desenvolvimento tbody`).empty();
@@ -498,6 +510,52 @@ function setarMesAtual() {
     if(select.value == Defaults.mesAtual) return;
 
     select.value = Defaults.mesAtual;
+}
+
+function chartValoresExplicitos(chart) {
+    const { ctx } = chart;
+    const meta = chart.getDatasetMeta(0);
+
+    ctx.save();
+
+    chart.data.datasets[0].data.forEach((valor, i) => {
+        const elemento = meta.data[i];
+
+        if (!elemento) return;
+
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 16px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        // GRÁFICO DE COLUNAS
+        if (chart.config.type === 'bar') {
+            const x = elemento.x;
+            const y = (elemento.y + elemento.base) / 2;
+
+            ctx.fillText(valor, x, y);
+        }
+
+        // GRÁFICO DE PIZZA / DOUGHNUT
+        else if (
+            chart.config.type === 'pie' ||
+            chart.config.type === 'doughnut'
+        ) {
+            const angle = (elemento.startAngle + elemento.endAngle) / 2;
+
+            const x = elemento.x +
+                Math.cos(angle) *
+                (elemento.outerRadius + elemento.innerRadius) / 2;
+
+            const y = elemento.y +
+                Math.sin(angle) *
+                (elemento.outerRadius + elemento.innerRadius) / 2;
+
+            ctx.fillText(valor, x, y);
+        }
+    });
+
+    ctx.restore();
 }
 
 $(document).on("click", ".coroa, .caveira", function () {
