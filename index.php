@@ -677,7 +677,7 @@
             <div class="col-12 col-sm-6 col-xl-3">
                 <div class="kpi-card kpi-primary">
                     <div class="kpi-top">
-                        <div class="kpi-title">Chamados criados</div>
+                        <div class="kpi-title">Criados</div>
                         <div class="kpi-icon">
                             <i class="bi bi-ticket-perforated"></i>
                         </div>

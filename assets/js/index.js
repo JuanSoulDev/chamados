@@ -326,7 +326,7 @@ async function listarChamados() {
                 datasets: [
                     {
                         label: 'Quantidade',
-                        data: abas.map((e) => chamadosNaoArquivadosPorAba[e.descricao].length),
+                        data: abas.map((e) => (chamadosNaoArquivadosPorAba[e.descricao] ?? []).length),
                         backgroundColor: abas.map((e) => e.cor),
                         borderRadius: 7,
                         borderSkipped: true
