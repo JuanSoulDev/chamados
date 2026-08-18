@@ -214,6 +214,12 @@ async function listarChamados() {
                     mode: 'index',
                     intersect: false
                 },
+                animation: {
+                    x: {
+                        duration: 800,
+                        from: 0
+                    }
+                },
                 plugins: {
 
                     legend: {
@@ -269,6 +275,12 @@ async function listarChamados() {
                 plugins: {
                     legend: {
                         position: 'bottom'
+                    }
+                },
+                animation: {
+                    x: {
+                        duration: 800,
+                        from: 0
                     }
                 }
             },
