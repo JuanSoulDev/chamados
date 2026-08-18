@@ -1,7 +1,7 @@
 <?php
-session_start();
+include_once("functions.php");
+require_once("controlador.php");
 include_once("../connection/conexao.php");
-include_once("../function/functions.php");
 
 $opcao = $_POST["s"];
 

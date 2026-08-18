@@ -46,7 +46,7 @@ $(document).ready(async function() {
 function requisicaoPadrao(params) {
     return new Promise((res, rej) => {
         $.ajax({
-            url: "app/function/indexController.php",
+            url: "app/function/index.php",
             data: params,
             dataType: "json",
             type: "POST",
