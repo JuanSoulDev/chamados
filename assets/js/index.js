@@ -253,9 +253,9 @@ async function listarChamados() {
                             abertos.filter(e  => !e.e_implementacao && !e.e_suporte).length
                         ],
                         backgroundColor: [
-                            '#20c997',
-                            '#f59f00',
-                            '#0dcaf0'
+                            '#20a2c9',
+                            '#f52500',
+                            '#640df0'
                         ],
                         borderWidth: 0,
                         hoverOffset: 8
@@ -414,18 +414,18 @@ async function listarQuantitativos() {
                     labels: chamadosFinalizadosDaSemana.map((e) => e.nome_usuario),
                     datasets: [
                         {
-                            label: 'abertos',
-                            data: chamadosFinalizadosDaSemana.map((e) => e.abertos_da_semana),
-                            backgroundColor: "#f59f00",
-                            borderRadius: 2,
-                            barThickness: 35
-                        },
-                        {
                             label: 'finalizados',
                             data: chamadosFinalizadosDaSemana.map((e) => e.finalizados_da_semana),
                             backgroundColor: '#43aa8b',
                             borderRadius: 2,
-                            barThickness: 35
+                            barThickness: 25
+                        },
+                        {
+                            label: 'abertos',
+                            data: chamadosFinalizadosDaSemana.map((e) => e.abertos_da_semana),
+                            backgroundColor: "#f59f00",
+                            borderRadius: 2,
+                            barThickness: 25
                         }
                     ]
                 },
@@ -435,7 +435,13 @@ async function listarQuantitativos() {
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            display: false
+                            position: 'bottom'
+                        }
+                    },
+                    animation: {
+                        x: {
+                            duration: 800,
+                            from: 0
                         }
                     },
                     scales: {

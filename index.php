@@ -664,7 +664,7 @@
                     <label class="form-label d-none d-lg-block">
                         &nbsp;
                     </label>
-                    <button type="button" class="btn btn-refresh w-100" onclick="listarChamados()">
+                    <button type="button" class="btn btn-refresh w-100" onclick="listarChamados(), listarQuantitativos()">
                         <i class="bi bi-arrow-clockwise me-1"></i>Atualizar
                     </button>
                 </div>
@@ -738,10 +738,10 @@
                             <i class="bi bi-code-slash"></i>
                         </div>
                     </div>
-                    <div class="kpi-number" id="qtd-desenvolvimento">7</div>
+                    <div class="kpi-number" id="qtd-desenvolvimento"></div>
                     <div class="kpi-footer">
                         <span class="kpi-period">
-                            Filtrados: <strong id="qtd-desenvolvimento-filtrados">1</strong>
+                            Filtrados: <strong id="qtd-desenvolvimento-filtrados"></strong>
                         </span>
                         <span class="text-info fw-semibold">andamento</span>
                     </div>
@@ -812,7 +812,7 @@
                             <h2 class="dashboard-card-title">
                                 <i class="bi bi-clock-history me-2"></i>Desenvolvimento
                             </h2>
-                            <div class="dashboard-card-subtitle">Listagem de chamados que estão em desenvolvimento</div>
+                            <div class="dashboard-card-subtitle">Listagem de chamados que estão em andamento</div>
                         </div>
                         <span class="status-badge badge-info">Geral</span>
                     </div>
