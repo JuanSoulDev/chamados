@@ -794,7 +794,7 @@
                             <h2 class="dashboard-card-title">
                                 <i class="bi bi-bar-chart-steps me-2"></i>Ranking Semanal
                             </h2>
-                            <div class="dashboard-card-subtitle">Programadores com mais chamados finalizados</div>
+                            <div class="dashboard-card-subtitle">Chamados criados e finalizados nesta semana por programador</div>
                         </div>
                         <span class="status-badge badge-info">Semana</span>
                     </div>

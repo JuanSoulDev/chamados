@@ -75,8 +75,12 @@ function listarChamados() {
             labels_identificacao AS (
                 SELECT
                     l.card_id,
-                    MAX(l.label_id IN(715, 716)) = 1 AS e_implementacao,
-                    MAX(l.label_id IN(714, 750, 765, 766)) = 1 AS e_suporte
+                    MAX(l.label_id = 714) = 1 AS _bug,
+                    MAX(l.label_id = 765) = 1 AS _configuracao,
+                    MAX(l.label_id = 715) = 1 AS _customizar,
+                    MAX(l.label_id = 750) = 1 AS _inconsistente,
+                    MAX(l.label_id = 716) = 1 AS _novo,
+                    MAX(l.label_id = 766) = 1 AS _unificacao
                 FROM
                     oc_deck_assigned_labels l
                 WHERE
@@ -113,8 +117,12 @@ function listarChamados() {
                         )
                     )
                 ) AS card_filtrado,
-                COALESCE(li.e_implementacao, FALSE) AS e_implementacao,
-                COALESCE(li.e_suporte, FALSE) AS e_suporte,
+                COALESCE(li._bug, FALSE) AS _bug,
+                COALESCE(li._configuracao, FALSE) AS _configuracao,
+                COALESCE(li._customizar, FALSE) AS _customizar,
+                COALESCE(li._inconsistente, FALSE) AS _inconsistente,
+                COALESCE(li._novo, FALSE) AS _novo,
+                COALESCE(li._unificacao, FALSE) AS _unificacao,
                 YEAR(FROM_UNIXTIME(c.created_at)) AS ano, 
                 MONTH(FROM_UNIXTIME(c.created_at)) AS mes,
                 (
@@ -326,6 +334,7 @@ function listarQuantitativos() {
                     CASE
                         WHEN 
                             s.title = 'Desenvolvimento' 
+                            AND c.archived = 0
                         THEN
                             c.id
                     END

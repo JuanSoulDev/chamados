@@ -161,11 +161,13 @@ async function listarChamados() {
         const labels = Object.values(Defaults.meses).slice(1, quantidadeMeses + 1);
         const chamadosAno = Defaults.chamados.filter(chamado => chamado.ano == anoSelecionado);
         const chamadosFinalizados = chamadosAno.filter(chamado => chamado.finalizado == 1 || chamado.arquivado == 1);
+        const chamadosAnoBug = chamadosAno.filter(chamado => chamado._bug);
         const chamadosDesenvolvimento = Defaults.chamados.filter(ch => !ch.arquivado && ch.aba == "Desenvolvimento");
 
         // DADOS AGRUPADOS
         const chamadosPorMes = Object.groupBy(chamadosAno, chamado => chamado.mes);
         const finalizadosPorMes = Object.groupBy(chamadosFinalizados, chamado => chamado.mes);
+        const anoBugPorMes = Object.groupBy(chamadosAnoBug, chamado => chamado.mes);
         const chamadosNaoArquivadosPorAba = Object.groupBy(Defaults.chamados.filter(e => e.arquivado == 0), chamado => chamado.aba);
 
         // QUANTITATIVO EM ARRAY
@@ -176,6 +178,10 @@ async function listarChamados() {
         const dataAnoFinalizado = Array.from(
             { length: 12 },
             (_, i) => finalizadosPorMes[i + 1]?.length ?? 0
+        );
+        const dataAnoBugPorMes = Array.from(
+            { length: 12 },
+            (_, i) => anoBugPorMes[i + 1]?.length ?? 0
         );
 
         $("#ano-grafico-evolucao").html(anoSelecionado);
@@ -198,6 +204,16 @@ async function listarChamados() {
                         label: 'Finalizados',
                         data: dataAnoFinalizado,
                         borderColor: '#20c997',
+                        backgroundColor: 'rgba(32, 201, 151, .05)',
+                        fill: true,
+                        tension: .4,
+                        pointRadius: 3,
+                        pointHoverRadius: 6
+                    },
+                    {
+                        label: 'Bugs',
+                        data: dataAnoBugPorMes,
+                        borderColor: '#a70909',
                         backgroundColor: 'rgba(32, 201, 151, .05)',
                         fill: true,
                         tension: .4,
@@ -236,26 +252,53 @@ async function listarChamados() {
             }
         });
 
+
+        const dadosChamadosAbertos = [
+            {
+                label: "Bug",
+                data: abertos.filter(e  => e._bug).length,
+                color: "#dc3545"
+            },
+            {
+                label: "Configuração",
+                data: abertos.filter(e  => e._configuracao).length,
+                color: "#0d6efd"
+            },
+            {
+                label: "Customizar",
+                data: abertos.filter(e  => e._customizar).length,
+                color: "#6f42c1"
+            },
+            {
+                label: "Inconsistente",
+                data: abertos.filter(e  => e._inconsistente).length,
+                color: "#fd7e14"
+            },
+            {
+                label: "Novo",
+                data: abertos.filter(e  => e._novo).length,
+                color: "#198754"
+            },
+            {
+                label: "Unificação",
+                data: abertos.filter(e  => e._unificacao).length,
+                color: "#20c997"
+            },
+            {
+                label: "Não Informado",
+                data: abertos.filter(e  => !e._bug && !e._configuracao && !e._customizar && !e._inconsistente && !e._novo && !e._unificacao).length,
+                color: "#6c757d"
+            },
+        ].filter(dca => dca.data > 0);
+
         new Chart(document.getElementById('chart-chamados-abertos'), {
             type: 'doughnut',
             data: {
-                labels: [
-                    'Novidades',
-                    'Erros',
-                    'Não informado'
-                ],
+                labels: dadosChamadosAbertos.map(dca => dca.label),
                 datasets: [
                     {
-                        data: [
-                            abertos.filter(e  => e.e_implementacao).length,
-                            abertos.filter(e  => e.e_suporte).length,
-                            abertos.filter(e  => !e.e_implementacao && !e.e_suporte).length
-                        ],
-                        backgroundColor: [
-                            '#20a2c9',
-                            '#f52500',
-                            '#640df0'
-                        ],
+                        data: dadosChamadosAbertos.map(dca => dca.data),
+                        backgroundColor: dadosChamadosAbertos.map(dca => dca.color),
                         borderWidth: 0,
                         hoverOffset: 8
                     }
