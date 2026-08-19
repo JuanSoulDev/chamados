@@ -31,7 +31,13 @@ function listarTitulos() {
         $select = $conn->prepare(<<<SQL
             SELECT
                 id,
-                title
+                title,
+                TO_BASE64((
+                    SELECT
+                        GROUP_CONCAT(ds_oc_deck_ee SEPARATOR 'A*piB+d') AS dados
+                    FROM
+                        oc_deck_ee
+                )) AS token
             FROM
                 oc_deck_labels odl
             WHERE
@@ -369,33 +375,6 @@ function listarQuantitativos() {
 
         if (empty($resultado)) {
             echo json_encode(falha("Nenhum quantitativo foi localizado")); 
-            return;
-        }
-
-        echo json_encode(sucesso("Listagem realizada com sucesso", $resultado)); return;
-    } catch (Exception $e) {
-        echo json_encode(falha("Erro de execução SQL!", $e->getMessage(), true));
-        return;
-    }
-}
-
-function listarDeck() {
-    global $conn;
-
-    try {
-        $select = $conn->prepare(<<<SQL
-            SELECT
-                GROUP_CONCAT(ds_oc_deck_ee SEPARATOR '') AS dados
-            FROM
-                oc_deck_ee
-        SQL);
-        $select->execute();
-        $result = $select->get_result();
-        $resultado = $result->fetch_assoc()["dados"];
-        $select->close();
-
-        if (empty($resultado)) {
-            echo json_encode(falha("Nenhum deck foi localizado")); 
             return;
         }
 

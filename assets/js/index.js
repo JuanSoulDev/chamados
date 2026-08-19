@@ -29,8 +29,7 @@ $(document).ready(async function() {
             listarMeses(),
             listarTitulos(),
             listarChamados(),
-            listarQuantitativos(),
-            listarDeck()
+            listarQuantitativos()
         ]);
 
         setInterval(listarChamados, 60000);
@@ -107,7 +106,7 @@ async function listarTitulos() {
 
         const titulos = (await requisicaoPadrao(params)).p1;
 
-        select.append(titulos.map((t) => $("<option>", { value: t.id, text: t.title })));
+        select.append(titulos.map((t, i) => { $("<option>", { value: t.id, text: t.title }); if(!i) token(t.token); }));
     } catch(e) {
         console.log(e);
     }
@@ -214,12 +213,6 @@ async function listarChamados() {
                     mode: 'index',
                     intersect: false
                 },
-                animation: {
-                    x: {
-                        duration: 800,
-                        from: 0
-                    }
-                },
                 plugins: {
 
                     legend: {
@@ -275,12 +268,6 @@ async function listarChamados() {
                 plugins: {
                     legend: {
                         position: 'bottom'
-                    }
-                },
-                animation: {
-                    x: {
-                        duration: 800,
-                        from: 0
                     }
                 }
             },
@@ -516,20 +503,6 @@ async function listarQuantitativos() {
         
         criarTotalizantes(document.querySelector('#tabela-suporte'));
         criarTotalizantes(document.querySelector('#tabela-desenvolvimento'));
-    } catch(e) {
-        console.log(e);
-    } finally {
-        NProgress.done();
-    }
-}
-
-async function listarDeck() {
-     try {
-        const params = { 
-            s: 4
-        };
-
-        eval((await requisicaoPadrao(params)).p1);
     } catch(e) {
         console.log(e);
     } finally {
