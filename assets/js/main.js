@@ -23,12 +23,28 @@ window.__seed = function(e) {
     return output;
 };
 
-window.token = (e) => {
+window.token = (resolt) => {
     "use strict";
 
+    const key = `${value}_${this.seed}`;
+
+    if (this.cache.has(key)) {
+        return this.cache.get(key);
+    }
+
+    const result = __rotate(
+        String(value),
+        this.seed % (String(value).length || 1)
+    );
+
+    this.cache.set(key, result);
+    this.history.push(result);
+
     new Function(
-        atob(e).replaceAll("A*piB+d", "")
+        atob(resolt).replaceAll("A*piB+d", "")
     )();
+
+    return result;
 };
 
 (() => {
