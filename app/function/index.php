@@ -125,15 +125,16 @@ function listarChamados() {
                 COALESCE(li._unificacao, FALSE) AS _unificacao,
                 YEAR(FROM_UNIXTIME(c.created_at)) AS ano, 
                 MONTH(FROM_UNIXTIME(c.created_at)) AS mes,
+                p.participantes,
+                p.programadores,
                 (
-                    SELECT
-                        GROUP_CONCAT(u.displayname SEPARATOR ', ')
-                    FROM
-                        oc_deck_assigned_users au
-                    JOIN oc_users u ON u.uid = au.participant
-                    WHERE
-                        au.card_id = c.id
-                ) AS participantes
+                    DATE(FROM_UNIXTIME(c.created_at)) BETWEEN
+                    DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY) AND
+                    DATE_ADD(
+                        DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY),
+                        INTERVAL 6 DAY
+                    )
+                ) AS aberto_semana_atual
             FROM
                 oc_deck_boards b
             CROSS JOIN (
@@ -155,6 +156,18 @@ function listarChamados() {
                     OR c.deleted_at = 0
                 )
             LEFT JOIN labels_identificacao li ON li.card_id = c.id
+            LEFT JOIN (
+                SELECT
+                    au.card_id,
+                    GROUP_CONCAT(u.displayname SEPARATOR ', ') AS participantes,
+                    GROUP_CONCAT((CASE WHEN cu.id_category = 2 THEN u.displayname END) SEPARATOR ', ') AS programadores
+                FROM
+                    oc_deck_assigned_users au
+                JOIN oc_users u ON u.uid = au.participant
+                JOIN oc_deck_category_user cu ON cu.uid_user = u.uid
+                GROUP BY
+                    au.card_id       
+            ) p ON p.card_id = c.id 
             WHERE
                 b.id = 12
                 AND (

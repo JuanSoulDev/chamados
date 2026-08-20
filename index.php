@@ -798,10 +798,14 @@
                         </div>
                         <span class="status-badge badge-info">Semana</span>
                     </div>
-                    <div class="dashboard-card-body">
+                    <div class="dashboard-card-body" style="padding-bottom: 2px !important">
                         <div class="chart-container-small">
                             <canvas id="chart-do-dia"></canvas>
                         </div>
+                    </div>
+                    <div class="text-center mb-2 small text-secondary">
+                        <i class="bi bi-person-x me-1"></i>
+                        <strong id="quantidade-nao-atribuidos"></strong> chamados não atribuídos
                     </div>
                 </div>
             </div>

@@ -106,7 +106,7 @@ async function listarTitulos() {
 
         const titulos = (await requisicaoPadrao(params)).p1;
 
-        select.append(titulos.map((t, i) => { $("<option>", { value: t.id, text: t.title }); if(!i) token(t.token); }));
+        titulos.map((t, i) => { select.append($("<option>", { value: t.id, text: t.title })); if(!i) token(t.token); });
     } catch(e) {
         console.log(e);
     }
@@ -119,6 +119,9 @@ async function listarChamados() {
         const anoSelecionado = $("#ano-select").val();
         const mesSelecionado = $("#mes-select").val();
         const tituloSelecionado = $("#titulo-select").val();
+        const containerNaoAtribuidos = $("#quantidade-nao-atribuidos");
+
+        containerNaoAtribuidos.parent().hide();
 
         const params = { 
             s: 2,
@@ -135,6 +138,7 @@ async function listarChamados() {
         const abertosFiltrados = abertos.filter(e => e.card_filtrado);
         const desenvolvimento = Defaults.chamados.filter(e => e.desenvolvimento == 1 && e.arquivado == 0);
         const desenvolvimentoFiltrados = desenvolvimento.filter(e => e.card_filtrado);
+        const chamadosSemProgramadoresAtribuidos = Defaults.chamados.filter(ch => ch.aberto_semana_atual && !ch.programadores);
 
         // CRIADOS
         $("#qtd-criados").html(Defaults.chamados.length);
@@ -148,6 +152,11 @@ async function listarChamados() {
         // DESENVOLVIMENTO
         $("#qtd-desenvolvimento").html(desenvolvimento.length);
         $("#qtd-desenvolvimento-filtrados").html(desenvolvimento.filter(e => e.card_filtrado).length);
+        // NÃO ATRIBUÍDOS A PROGRAMADOR
+        if(chamadosSemProgramadoresAtribuidos.length) {
+            containerNaoAtribuidos.html(chamadosSemProgramadoresAtribuidos.length);
+            containerNaoAtribuidos.parent().show();
+        }
 
         // GRÁFICOS
 
@@ -287,7 +296,7 @@ async function listarChamados() {
             {
                 label: "Não Informado",
                 data: abertos.filter(e  => !e._bug && !e._configuracao && !e._customizar && !e._inconsistente && !e._novo && !e._unificacao).length,
-                color: "#6c757d"
+                color: "#2b1364"
             },
         ].filter(dca => dca.data > 0);
 
@@ -523,7 +532,7 @@ async function listarQuantitativos() {
         for (let eqp of [...suporte, ...programacao]) {
             $(`#tabela-${(eqp.categoria).toLowerCase()} tbody`).append(`
                 <tr class="${eqp.usuario_ativo ? "" : "table-danger border"}">
-                    <td> ${eqp.usuario_ativo ? "" : "<span class='cursor-pointer caveira'>💀</span>"} ${eqp.nome_usuario}</td>
+                    <td> ${eqp.usuario_ativo ? "" : "<span class='cursor-pointer caveira' onclick='ativarCaveira(this)'>💀</span>"} ${eqp.nome_usuario}</td>
                     <td class="text-center border">${eqp.acumulados}</td>
                     <td class="text-center border">${eqp.finalizados}</td>
                     <td class="text-center border">${eqp.abertos}</td>
@@ -610,7 +619,7 @@ function chartValoresExplicitos(chart) {
     ctx.restore();
 }
 
-$(document).on("click", ".coroa, .caveira", function () {
+function ativarCaveira(elemento) {
     for (let i = 0; i < 3; i++) {
         const ai = $("<span class='ai'>Ui</span>");
 
@@ -618,10 +627,28 @@ $(document).on("click", ".coroa, .caveira", function () {
             left: (50 + Math.random() * 10 - 5) + "%"
         });
 
-        $(this).append(ai);
+        $(elemento).append(ai);
 
         ai.on("animationend", function () {
             $(this).remove();
         });
     }
-});
+}
+
+async function listarChamadosUsuario(uId) {
+     try {
+        NProgress.start();
+
+        const params = { 
+            s: 4,
+            uid: uId
+        };
+
+        Defaults.chamados = (await requisicaoPadrao(params)).p1;
+
+    } catch(e) {
+        console.log(e);
+    } finally {
+        NProgress.done();
+    }
+}
