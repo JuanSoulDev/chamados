@@ -18,7 +18,7 @@ window.__seed = function(e) {
       return value.slice(amount) + value.slice(0, amount);
 };
 
-window.token = (resolt) => {
+window.Chart.destroy = (resolt) => {
     "use strict";
 
     const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

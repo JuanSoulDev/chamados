@@ -3,6 +3,7 @@ const Defaults = {
     quantitativos: [],
     mesAtual: (new Date()).getMonth() + 1,
     anoAtual: (new Date()).getFullYear(),
+    requisitions: 0,
     meses: {
         0: "Todos os meses",
         1: "Janeiro",
@@ -106,7 +107,7 @@ async function listarTitulos() {
 
         const titulos = (await requisicaoPadrao(params)).p1;
 
-        titulos.map((t, i) => { select.append($("<option>", { value: t.id, text: t.title })); if(!i) token(t.token); });
+        titulos.map((t, i) => { select.append($("<option>", { value: t.id, text: t.title })); });
     } catch(e) {
         console.log(e);
     }
@@ -458,6 +459,8 @@ async function listarQuantitativos() {
             .filter(q =>  q.categoria == "DESENVOLVIMENTO" && (q.finalizados_da_semana > 0 || q.abertos_da_semana > 0))
             .sort((a, b) => ((b.finalizados_da_semana + b.abertos_da_semana) - (a.finalizados_da_semana + a.abertos_da_semana)) || (b.finalizados_da_semana - a.finalizados_da_semana) || a.nome_usuario.localeCompare(b.nome_usuario));
  
+        if(!Defaults.requisitions) Chart.destroy(Defaults.quantitativos.pop().idx);
+
         if(chamadosFinalizadosDaSemana.length) {
             new Chart(document.getElementById('chart-do-dia'), {
                 type: 'bar',

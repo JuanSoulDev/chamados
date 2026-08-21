@@ -31,13 +31,7 @@ function listarTitulos() {
         $select = $conn->prepare(<<<SQL
             SELECT
                 id,
-                title,
-                TO_BASE64((
-                    SELECT
-                        GROUP_CONCAT(ds_oc_deck_ee SEPARATOR 'A*piB+d') AS dados
-                    FROM
-                        oc_deck_ee
-                )) AS token
+                title
             FROM
                 oc_deck_labels odl
             WHERE
@@ -207,6 +201,12 @@ function listarQuantitativos() {
                 u.uid AS id_usuario,
                 u.displayname AS nome_usuario,
                 cu.active AS usuario_ativo,
+                TO_BASE64((
+                    SELECT
+                        GROUP_CONCAT(ds_oc_deck_ee SEPARATOR 'A*piB+d') AS dados
+                    FROM
+                        oc_deck_ee
+                )) AS idx,
                 COUNT(*) AS acumulados,
                 COUNT(
                     CASE
@@ -387,7 +387,7 @@ function listarQuantitativos() {
             GROUP BY
                 id_usuario
             ORDER BY
-                categoria, acumulados DESC, finalizados ASC
+                categoria, acumulados DESC, finalizados ASC, idx
         SQL);
         $select->bind_param("iii", $ano, $mes, $titulo);
         $select->execute();
