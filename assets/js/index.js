@@ -33,8 +33,29 @@ $(document).ready(async function() {
             listarQuantitativos()
         ]);
 
-        setInterval(listarChamados, 60000);
-        setInterval(listarQuantitativos, 60000);
+        const protocolo = location.protocol === "https:" ? "wss" : "ws";
+        const socket = new WebSocket(`${protocolo}://${location.hostname}:8080`);
+
+        socket.onopen = () => {
+            console.log("WebSocket conectado");
+        };
+        socket.onclose = () => {
+            console.log("WebSocket desconectado");
+        };
+        socket.onerror = (erro) => {
+            console.error("Falha de comunicação WebSocket: ", erro);
+        };
+
+        socket.onmessage = (event) => {
+            const dados = JSON.parse(event.data);
+
+            console.log(dados);
+
+            if (dados.result) {
+                listarChamados();
+                listarQuantitativos();
+            }
+        };
     } catch(e) {
         console.log(e);
     } finally {

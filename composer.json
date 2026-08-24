@@ -1,0 +1,17 @@
+{
+    "name": "sicap/chamados",
+    "autoload": {
+        "psr-4": {
+            "Sicap\\Chamados\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "JuanSoulDev",
+            "email": "juan.dev@sicapsolucoes.com"
+        }
+    ],
+    "require": {
+        "cboden/ratchet": "^0.4.4"
+    }
+}
