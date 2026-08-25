@@ -17,6 +17,7 @@ class WebSocket implements MessageComponentInterface
     private array $clientes = [];
     private ?int $ultimoIdCard = null;
     private ?int $ultimoIdAssignedUsers = null;
+    private ?int $ultimaAtualizacao = null;
 
     public function onOpen(ConnectionInterface $conn)
     {
@@ -45,7 +46,8 @@ class WebSocket implements MessageComponentInterface
         $result = $conn->query(<<<SQL
             SELECT
                 MAX(c.id) AS ultimo_id_card,
-                MAX(au.id) AS ultimo_id_assigned_users
+                MAX(au.id) AS ultimo_id_assigned_users,
+                MAX(c.last_modified) AS ultima_atualizacao
             FROM
                 oc_deck_stacks s
             JOIN oc_deck_cards c 
@@ -64,18 +66,21 @@ class WebSocket implements MessageComponentInterface
         $ids = $result->fetch_assoc();
         $ultimo_id_card = (int) $ids["ultimo_id_card"];
         $ultimo_id_assigned_users = (int) $ids["ultimo_id_assigned_users"];
+        $ultima_atualizacao = (int) $ids["ultima_atualizacao"];
 
         // Primeira consulta
-        if ($this->ultimoIdCard === null && $this->ultimoIdAssignedUsers === null) {
+        if ($this->ultimoIdCard === null && $this->ultimoIdAssignedUsers === null && $this->ultimaAtualizacao == null) {
             $this->ultimoIdCard = $ultimo_id_card;
             $this->ultimoIdAssignedUsers = $ultimo_id_assigned_users;
+            $this->ultimaAtualizacao = $ultima_atualizacao;
             return;
         }
 
         // Novo registro encontrado
-        if ($this->ultimoIdCard !== $ultimo_id_card || $this->ultimoIdAssignedUsers !== $ultimo_id_assigned_users) {
+        if ($this->ultimoIdCard !== $ultimo_id_card || $this->ultimoIdAssignedUsers !== $ultimo_id_assigned_users || $this->ultimaAtualizacao !== $ultima_atualizacao) {
             $this->ultimoIdCard = $ultimo_id_card;
             $this->ultimoIdAssignedUsers = $ultimo_id_assigned_users;
+            $this->ultimaAtualizacao = $ultima_atualizacao;
 
             foreach ($this->clientes AS $cliente) {
                 $cliente->send(json_encode(sucesso("Modificação localizada")));
@@ -102,6 +107,6 @@ $server = new IoServer(
     $loop
 );
 
-echo "WebSocket iniciado em ws://localhost:8080\n";
+echo "WebSocket iniciado";
 
 $server->run();
