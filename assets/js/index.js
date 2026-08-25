@@ -33,8 +33,7 @@ $(document).ready(async function() {
             listarQuantitativos()
         ]);
 
-        const protocolo = location.protocol === "https:" ? "wss" : "ws";
-        const socket = new WebSocket(`${protocolo}://${location.hostname}:8080`);
+        const socket = new WebSocket('wss://websocket.sicapteste.com.br/');
 
         socket.onopen = () => {
             console.log("WebSocket conectado");
