@@ -4,6 +4,8 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/../connection/conexao.php';
 require_once __DIR__ . '/functions.php';
 
+date_default_timezone_set('America/Sao_Paulo');
+
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 use Ratchet\WebSocket\WsServer;
@@ -93,8 +95,12 @@ $websocket = new WebSocket();
 
 $loop = Loop::get();
 
-$loop->addPeriodicTimer(2, function () use ($websocket) {
-    $websocket->verificarAlteracao();
+$loop->addPeriodicTimer(4, function () use ($websocket) {
+    $hora = (int) date('H');
+
+    if (($hora >= 8 && $hora < 12) || ($hora >= 14 && $hora < 18)) {
+        $websocket->verificarAlteracao();
+    }
 });
 
 $socket = new SocketServer('0.0.0.0:8080', [], $loop);
