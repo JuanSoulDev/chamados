@@ -60,10 +60,18 @@ $(document).ready(async function() {
                 ]);
 
                 if(Defaults.chamados.length > Defaults.qtdChamadosCriados) {
-                    new Notification("🔔 Novo chamado", {    
-                        body: "Um novo chamado foi aberto!",
-                        icon: "assets/img/icon-chamados.png"
-                    });
+                    let permissao = Notification.permission;
+
+                    if (permissao !== "granted") {
+                        permissao = await Notification.requestPermission();
+                    }
+
+                    if (permissao === "granted") {
+                        new Notification("🔔 Novo chamado", {    
+                            body: "Um novo chamado foi aberto!",
+                            icon: "assets/img/icon-chamados.png"
+                        });
+                    }
 
                     Defaults.qtdChamadosCriados = Defaults.chamados.length;
                 }
