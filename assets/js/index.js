@@ -18,7 +18,8 @@ const Defaults = {
         10: "Outubro",
         11: "Novembro",
         12: "Dezembro"
-    }
+    },
+    qtdChamadosCriados: 0
 };
 
 $(document).ready(async function() {
@@ -33,6 +34,8 @@ $(document).ready(async function() {
             listarQuantitativos()
         ]);
 
+        Defaults.qtdChamadosCriados = Defaults.chamados.length;
+
         const socket = new WebSocket('wss://websocket.sicapteste.com.br/');
 
         socket.onopen = () => {
@@ -45,14 +48,25 @@ $(document).ready(async function() {
             console.error("Falha de comunicação WebSocket: ", erro);
         };
 
-        socket.onmessage = (event) => {
+        socket.onmessage = async (event) => {
             const dados = JSON.parse(event.data);
 
             console.log(dados);
 
             if (dados.result) {
-                listarChamados();
-                listarQuantitativos();
+                await Promise.all([
+                    listarChamados(),
+                    listarQuantitativos()
+                ]);
+
+                if(Defaults.chamados.length > Defaults.qtdChamadosCriados) {
+                    new Notification("🔔 Novo chamado", {    
+                        body: "Um novo chamado foi aberto!",
+                        icon: "assets/img/icon-chamados.png"
+                    });
+
+                    Defaults.qtdChamadosCriados = Defaults.chamados.length;
+                }
             }
         };
     } catch(e) {
