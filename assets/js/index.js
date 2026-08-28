@@ -282,7 +282,6 @@ async function listarChamados() {
             }
         });
 
-
         const dadosChamadosAbertos = [
             {
                 label: "Bug",
@@ -351,6 +350,9 @@ async function listarChamados() {
                 }
             }]
         });
+
+        $("#abertos-qtd-novo").html(abertos.filter(e  => e._customizar || e._novo).length);
+        $("#abertos-qtd-bug").html(abertos.filter(e  => e._bug).length);
 
         const abas = [
             {

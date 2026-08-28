@@ -785,6 +785,12 @@
                             <canvas id="chart-chamados-abertos"></canvas>
                         </div>
                     </div>
+                    <div class="text-center mb-2 small text-secondary">
+                        <i class="bi bi-plus-circle me-1"></i>
+                        <strong id="abertos-qtd-novo"></strong> Implementações &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                         <i class="bi bi-bug me-1"></i>
+                        <strong id="abertos-qtd-bug"></strong> Sustentações
+                    </div>
                 </div>
             </div>
             <div class="col-12 col-xl-7">
