@@ -95,10 +95,11 @@ $websocket = new WebSocket();
 
 $loop = Loop::get();
 
-$loop->addPeriodicTimer(4, function () use ($websocket) {
+$loop->addPeriodicTimer(6, function () use ($websocket) {
     $hora = (int) date('H');
+    $diaSemana = (int) date('N');
 
-    if (($hora >= 8 && $hora < 12) || ($hora >= 14 && $hora < 18)) {
+    if ($diaSemana >= 1 && $diaSemana <= 5 && (($hora >= 8 && $hora < 12) || ($hora >= 14 && $hora < 18))) {
         $websocket->verificarAlteracao();
     }
 });
