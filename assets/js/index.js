@@ -67,10 +67,15 @@ $(document).ready(async function() {
                     }
 
                     if (permissao === "granted") {
-                        new Notification("🔔 Novo chamado", {    
+                        let notificacao = new Notification("🔔 Novo chamado", {    
                             body: "Um novo chamado foi aberto!",
                             icon: "assets/img/icon-chamados.png"
                         });
+
+                        notificacao.onclick = function () {
+                            window.open(`https://sicapdrive.com.br/apps/deck/board/12/card/${Math.max(...Defaults.chamados.map(item => item.id))}`, "_blank");
+                            notificacao.close();
+                        };
                     }
 
                     Defaults.qtdChamadosCriados = Defaults.chamados.length;
