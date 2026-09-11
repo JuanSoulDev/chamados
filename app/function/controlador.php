@@ -1,5 +1,5 @@
 <?php
-$limite = 20;
+$limite = 14;
 $periodo = 10; // segundos
 $agora = time();
 $dados = [];
