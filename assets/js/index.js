@@ -67,13 +67,14 @@ $(document).ready(async function() {
                     }
 
                     if (permissao === "granted") {
-                        let notificacao = new Notification("🔔 Novo chamado", {    
+                        const chamadoAberto = Math.max(...Defaults.chamados.map(item => item.id));
+                        let notificacao = new Notification(`🔔 #${chamadoAberto}`, {    
                             body: "Um novo chamado foi aberto!",
                             icon: "assets/img/icon-chamados.png"
                         });
 
                         notificacao.onclick = function () {
-                            window.open(`https://sicapdrive.com.br/apps/deck/board/12/card/${Math.max(...Defaults.chamados.map(item => item.id))}`, "_blank");
+                            window.open(`https://sicapdrive.com.br/apps/deck/board/12/card/${chamadoAberto}`, "_blank");
                             notificacao.close();
                         };
                     }
