@@ -1,4 +1,6 @@
 <?php
+if (($_POST["s"] ?? null) != 3) return;
+
 $limite = 14;
 $periodo = 10; // segundos
 $agora = time();
