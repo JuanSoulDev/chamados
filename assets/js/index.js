@@ -490,8 +490,6 @@ async function listarQuantitativos() {
      try {
         NProgress.start();
 
-        Chart.getChart('chart-do-dia')?.destroy();
-
         const anoSelecionado = $("#ano-select").val();
         const mesSelecionado = $("#mes-select").val();
         const tituloSelecionado = $("#titulo-select").val();
@@ -504,6 +502,8 @@ async function listarQuantitativos() {
         };
 
         Defaults.quantitativos = (await requisicaoPadrao(params)).p1;
+
+        Chart.getChart('chart-do-dia')?.destroy();
 
         let chamadosFinalizadosDaSemana = Defaults.quantitativos
             .filter(q =>  q.categoria == "DESENVOLVIMENTO" && (q.finalizados_da_semana > 0 || q.abertos_da_semana > 0))
