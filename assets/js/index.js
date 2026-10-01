@@ -233,6 +233,7 @@ async function listarChamados() {
         const chamadosAnoProfessor = chamadosAno.filter(chamado => chamado._modulo_professor);
         const chamadosAnoMerenda = chamadosAno.filter(chamado => chamado._modulo_merenda);
         const chamadosAnoTransporte = chamadosAno.filter(chamado => chamado._modulo_transporte);
+        const chamadosAnoOutros = chamadosAno.filter(chamado => chamado._modulo_nao_selecionado);
 
         const chamadosDesenvolvimento = Defaults.chamados.filter(ch => !ch.arquivado && ch.aba == "Desenvolvimento");
 
@@ -252,6 +253,7 @@ async function listarChamados() {
         const anoProfessorPorMes = Object.groupBy(chamadosAnoProfessor, chamado => chamado.mes);
         const anoMerendaPorMes = Object.groupBy(chamadosAnoMerenda, chamado => chamado.mes);
         const anoTransportePorMes = Object.groupBy(chamadosAnoTransporte, chamado => chamado.mes);
+        const anoOutrosPorMes = Object.groupBy(chamadosAnoOutros, chamado => chamado.mes);
 
         const chamadosNaoArquivadosPorAba = Object.groupBy(Defaults.chamados.filter(e => e.arquivado == 0), chamado => chamado.aba);
 
@@ -620,7 +622,17 @@ async function listarChamados() {
                         tension: .4,
                         pointRadius: 3,
                         pointHoverRadius: 6
-                    }
+                    },
+                    {
+                        label: 'Outros',
+                        data: Array.from({ length: 12 }, (_, i) => anoOutrosPorMes[i + 1]?.length ?? 0),
+                        borderColor: '#00613B',
+                        backgroundColor: 'rgba(32, 201, 151, .05)',
+                        fill: true,
+                        tension: .4,
+                        pointRadius: 3,
+                        pointHoverRadius: 6
+                    },
                 ]
             },
             options: {
