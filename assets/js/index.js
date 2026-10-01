@@ -233,7 +233,12 @@ async function listarChamados() {
         const chamadosAnoProfessor = chamadosAno.filter(chamado => chamado._modulo_professor);
         const chamadosAnoMerenda = chamadosAno.filter(chamado => chamado._modulo_merenda);
         const chamadosAnoTransporte = chamadosAno.filter(chamado => chamado._modulo_transporte);
-        const chamadosAnoOutros = chamadosAno.filter(chamado => chamado._modulo_nao_selecionado);
+        const chamadosAnoOutros = chamadosAno.filter(chamado => 
+            !chamado._modulo_consultoria && !chamado._modulo_processo_seletivo && !chamado._modulo_academy && 
+            !chamado._modulo_saed && !chamado._modulo_aee && !chamado._modulo_secretaria_escolar &&
+            !chamado._modulo_secretaria_geral && !chamado._modulo_estudante && !chamado._modulo_professor && 
+            !chamado._modulo_merenda && !chamado._modulo_transporte
+        );
 
         const chamadosDesenvolvimento = Defaults.chamados.filter(ch => !ch.arquivado && ch.aba == "Desenvolvimento");
 

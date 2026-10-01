@@ -86,8 +86,7 @@ function listarChamados() {
                     MAX(l.label_id = 210) = 1 AS _modulo_estudante,
                     MAX(l.label_id IN(204, 216, 205, 206, 208, 207)) = 1 AS _modulo_professor,
                     MAX(l.label_id = 212) = 1 AS _modulo_transporte,
-                    MAX(l.label_id = 213) = 1 AS _modulo_merenda,
-                    MAX(l.label_id IN(608, 777, 778, 471, 214, 215, 203, 153, 198, 202, 211, 196, 197, 199, 200, 201, 210, 204, 216, 205, 206, 208, 207, 212, 213)) = 0 AS _modulo_nao_selecionado
+                    MAX(l.label_id = 213) = 1 AS _modulo_merenda
                 FROM
                     oc_deck_assigned_labels l
                 WHERE
@@ -143,7 +142,6 @@ function listarChamados() {
                 COALESCE(li._modulo_professor, FALSE) AS _modulo_professor,
                 COALESCE(li._modulo_merenda, FALSE) AS _modulo_merenda,
                 COALESCE(li._modulo_transporte, FALSE) AS _modulo_transporte,
-                COALESCE(li._modulo_nao_selecionado, FALSE) AS _modulo_nao_selecionado,
 
                 YEAR(FROM_UNIXTIME(c.created_at)) AS ano, 
                 MONTH(FROM_UNIXTIME(c.created_at)) AS mes,

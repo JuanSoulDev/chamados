@@ -46,7 +46,6 @@
         ========================================================= */
 
         .dashboard-container {
-            max-width: 1800px;
             margin: auto;
             padding: 25px;
         }
@@ -634,7 +633,7 @@
                         <div class="status-online">
                             Atualização automática
                         </div>
-                        <img src="./assets/files/logo.svg" t="Logo" style="height: 42px; max-width: 180px;">
+                        <img src="./assets/img/logo-sicap.png" t="Logo" style="height: 42px; max-width: 180px;">
                     </div>
                 </div>
             </div>
