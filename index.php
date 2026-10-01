@@ -862,6 +862,24 @@
                     </div>
                 </div>
             </div>
+            <div class="col-12 col-xl-12">
+                <div class="dashboard-card">
+                    <div class="dashboard-card-header">
+                        <div>
+                            <h2 class="dashboard-card-title">
+                                <i class="bi bi-bar-chart-line me-2"></i>Evolução dos chamados por módulo
+                            </h2>
+                            <div class="dashboard-card-subtitle">Acompanhamento mensal de chamados criados e finalizados por sistema</div>
+                        </div>
+                        <span id="ano-grafico-evolucao-modulo" class="status-badge badge-info"></span>
+                    </div>
+                    <div class="dashboard-card-body">
+                        <div class="chart-container-small">
+                            <canvas id="chart-evolucao-mes-sistema"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!--DETALHAMENTO DOS CHAMADOS-->

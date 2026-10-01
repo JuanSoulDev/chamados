@@ -74,11 +74,24 @@ function listarChamados() {
                     MAX(l.label_id = 715) = 1 AS _customizar,
                     MAX(l.label_id = 750) = 1 AS _inconsistente,
                     MAX(l.label_id = 716) = 1 AS _novo,
-                    MAX(l.label_id = 766) = 1 AS _unificacao
+                    MAX(l.label_id = 766) = 1 AS _unificacao,
+
+                    MAX(l.label_id = 608) = 1 AS _modulo_consultoria,
+                    MAX(l.label_id = 777) = 1 AS _modulo_processo_seletivo,
+                    MAX(l.label_id = 778) = 1 AS _modulo_academy,
+                    MAX(l.label_id = 471) = 1 AS _modulo_saed,
+                    MAX(l.label_id = 214) = 1 AS _modulo_aee,
+                    MAX(l.label_id = 215) = 1 AS _modulo_secretaria_geral,
+                    MAX(l.label_id IN(203, 153, 198, 202, 211, 196, 197, 199, 200, 201)) = 1 AS _modulo_secretaria_escolar,
+                    MAX(l.label_id = 210) = 1 AS _modulo_estudante,
+                    MAX(l.label_id IN(204, 216, 205, 206, 208, 207)) = 1 AS _modulo_professor,
+                    MAX(l.label_id = 212) = 1 AS _modulo_transporte,
+                    MAX(l.label_id = 213) = 1 AS _modulo_merenda
                 FROM
                     oc_deck_assigned_labels l
                 WHERE
                     l.label_id IN(714, 715, 716, 750, 765, 766)
+                    OR l.label_id IN(608, 777, 778, 471, 214, 215, 203, 153, 198, 202, 211, 196, 197, 199, 200, 201, 210, 204, 216, 205, 206, 208, 207, 212, 213)
                 GROUP BY
                     l.card_id
             )
@@ -117,6 +130,19 @@ function listarChamados() {
                 COALESCE(li._inconsistente, FALSE) AS _inconsistente,
                 COALESCE(li._novo, FALSE) AS _novo,
                 COALESCE(li._unificacao, FALSE) AS _unificacao,
+
+                COALESCE(li._modulo_consultoria, FALSE) AS _modulo_consultoria,
+                COALESCE(li._modulo_processo_seletivo, FALSE) AS _modulo_processo_seletivo,
+                COALESCE(li._modulo_academy, FALSE) AS _modulo_academy,
+                COALESCE(li._modulo_saed, FALSE) AS _modulo_saed,
+                COALESCE(li._modulo_aee, FALSE) AS _modulo_aee,
+                COALESCE(li._modulo_secretaria_geral, FALSE) AS _modulo_secretaria_geral,
+                COALESCE(li._modulo_secretaria_escolar, FALSE) AS _modulo_secretaria_escolar,
+                COALESCE(li._modulo_estudante, FALSE) AS _modulo_estudante,
+                COALESCE(li._modulo_professor, FALSE) AS _modulo_professor,
+                COALESCE(li._modulo_merenda, FALSE) AS _modulo_merenda,
+                COALESCE(li._modulo_transporte, FALSE) AS _modulo_transporte,
+
                 YEAR(FROM_UNIXTIME(c.created_at)) AS ano, 
                 MONTH(FROM_UNIXTIME(c.created_at)) AS mes,
                 p.participantes,

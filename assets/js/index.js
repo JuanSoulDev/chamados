@@ -213,6 +213,7 @@ async function listarChamados() {
         Chart.getChart('chart-evolucao-mes')?.destroy();
         Chart.getChart('chart-chamados-abertos')?.destroy();
         Chart.getChart('chart-abas')?.destroy();
+        Chart.getChart('chart-evolucao-mes-sistema')?.destroy();
 
         // CONSTANTES
         const quantidadeMeses = Defaults.anoAtual > anoSelecionado ? 12 : Defaults.mesAtual;
@@ -220,12 +221,38 @@ async function listarChamados() {
         const chamadosAno = Defaults.chamados.filter(chamado => chamado.ano == anoSelecionado);
         const chamadosFinalizados = chamadosAno.filter(chamado => chamado.finalizado == 1 || chamado.arquivado == 1);
         const chamadosAnoBug = chamadosAno.filter(chamado => chamado._bug);
+
+        const chamadosAnoConsultoria = chamadosAno.filter(chamado => chamado._modulo_consultoria);
+        const chamadosAnoProcessoSeletivo = chamadosAno.filter(chamado => chamado._modulo_processo_seletivo);
+        const chamadosAnoAcademy = chamadosAno.filter(chamado => chamado._modulo_academy);
+        const chamadosAnoSaed = chamadosAno.filter(chamado => chamado._modulo_saed);
+        const chamadosAnoAee = chamadosAno.filter(chamado => chamado._modulo_aee);
+        const chamadosAnoSecretariaEscolar = chamadosAno.filter(chamado => chamado._modulo_secretaria_escolar);
+        const chamadosAnoSecretariaGeral = chamadosAno.filter(chamado => chamado._modulo_secretaria_geral);
+        const chamadosAnoEstudante = chamadosAno.filter(chamado => chamado._modulo_estudante);
+        const chamadosAnoProfessor = chamadosAno.filter(chamado => chamado._modulo_professor);
+        const chamadosAnoMerenda = chamadosAno.filter(chamado => chamado._modulo_merenda);
+        const chamadosAnoTransporte = chamadosAno.filter(chamado => chamado._modulo_transporte);
+
         const chamadosDesenvolvimento = Defaults.chamados.filter(ch => !ch.arquivado && ch.aba == "Desenvolvimento");
 
         // DADOS AGRUPADOS
         const chamadosPorMes = Object.groupBy(chamadosAno, chamado => chamado.mes);
         const finalizadosPorMes = Object.groupBy(chamadosFinalizados, chamado => chamado.mes);
         const anoBugPorMes = Object.groupBy(chamadosAnoBug, chamado => chamado.mes);
+        
+        const anoConsultoriaPorMes = Object.groupBy(chamadosAnoConsultoria, chamado => chamado.mes);
+        const anoProcessoSeletivoPorMes = Object.groupBy(chamadosAnoProcessoSeletivo, chamado => chamado.mes);
+        const anoAcademyPorMes = Object.groupBy(chamadosAnoAcademy, chamado => chamado.mes);
+        const anoSaedPorMes = Object.groupBy(chamadosAnoSaed, chamado => chamado.mes);
+        const anoAeePorMes = Object.groupBy(chamadosAnoAee, chamado => chamado.mes);
+        const anoSecretariaEscolarPorMes = Object.groupBy(chamadosAnoSecretariaEscolar, chamado => chamado.mes);
+        const anoSecretariaGeralPorMes = Object.groupBy(chamadosAnoSecretariaGeral, chamado => chamado.mes);
+        const anoEstudantePorMes = Object.groupBy(chamadosAnoEstudante, chamado => chamado.mes);
+        const anoProfessorPorMes = Object.groupBy(chamadosAnoProfessor, chamado => chamado.mes);
+        const anoMerendaPorMes = Object.groupBy(chamadosAnoMerenda, chamado => chamado.mes);
+        const anoTransportePorMes = Object.groupBy(chamadosAnoTransporte, chamado => chamado.mes);
+
         const chamadosNaoArquivadosPorAba = Object.groupBy(Defaults.chamados.filter(e => e.arquivado == 0), chamado => chamado.aba);
 
         // QUANTITATIVO EM ARRAY
@@ -477,6 +504,154 @@ async function listarChamados() {
                 </tr> 
             `);
         }
+
+        $("#ano-grafico-evolucao-modulo").html(anoSelecionado);
+        new Chart(document.getElementById('chart-evolucao-mes-sistema'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Consultoria',
+                        data: Array.from({ length: 12 }, (_, i) => anoConsultoriaPorMes[i + 1]?.length ?? 0),
+                        borderColor: '#3A3B3D',
+                        backgroundColor: 'rgba(67, 97, 238, .08)',
+                        fill: true,
+                        tension: .4,
+                        pointRadius: 3,
+                        pointHoverRadius: 6
+                    },
+                    {
+                        label: 'Processo Seletivo',
+                        data: Array.from({ length: 12 }, (_, i) => anoProcessoSeletivoPorMes[i + 1]?.length ?? 0),
+                        borderColor: '#56f6f2',
+                        backgroundColor: 'rgba(67, 97, 238, .08)',
+                        fill: true,
+                        tension: .4,
+                        pointRadius: 3,
+                        pointHoverRadius: 6
+                    },
+                    {
+                        label: 'Academy',
+                        data: Array.from({ length: 12 }, (_, i) => anoAcademyPorMes[i + 1]?.length ?? 0),
+                        borderColor: '#56f6b5',
+                        backgroundColor: 'rgba(67, 97, 238, .08)',
+                        fill: true,
+                        tension: .4,
+                        pointRadius: 3,
+                        pointHoverRadius: 6
+                    },
+                                        {
+                        label: 'SAED',
+                        data: Array.from({ length: 12 }, (_, i) => anoSaedPorMes[i + 1]?.length ?? 0),
+                        borderColor: '#541dae',
+                        backgroundColor: 'rgba(67, 97, 238, .08)',
+                        fill: true,
+                        tension: .4,
+                        pointRadius: 3,
+                        pointHoverRadius: 6
+                    },
+                                        {
+                        label: 'AEE',
+                        data: Array.from({ length: 12 }, (_, i) => anoAeePorMes[i + 1]?.length ?? 0),
+                        borderColor: '#b6469d',
+                        backgroundColor: 'rgba(67, 97, 238, .08)',
+                        fill: true,
+                        tension: .4,
+                        pointRadius: 3,
+                        pointHoverRadius: 6
+                    },
+                    {
+                        label: 'Secretaria Escolar',
+                        data: Array.from({ length: 12 }, (_, i) => anoSecretariaEscolarPorMes[i + 1]?.length ?? 0),
+                        borderColor: '#000000',
+                        backgroundColor: 'rgba(67, 97, 238, .08)',
+                        fill: true,
+                        tension: .4,
+                        pointRadius: 3,
+                        pointHoverRadius: 6
+                    },
+                    {
+                        label: 'Secretaria Geral',
+                        data: Array.from({ length: 12 }, (_, i) => anoSecretariaGeralPorMes[i + 1]?.length ?? 0),
+                        borderColor: '#905800',
+                        backgroundColor: 'rgba(32, 201, 151, .05)',
+                        fill: true,
+                        tension: .4,
+                        pointRadius: 3,
+                        pointHoverRadius: 6
+                    },
+                    {
+                        label: 'Estudante',
+                        data: Array.from({ length: 12 }, (_, i) => anoEstudantePorMes[i + 1]?.length ?? 0),
+                        borderColor: '#746500',
+                        backgroundColor: 'rgba(32, 201, 151, .05)',
+                        fill: true,
+                        tension: .4,
+                        pointRadius: 3,
+                        pointHoverRadius: 6
+                    },
+                    {
+                        label: 'Professor',
+                        data: Array.from({ length: 12 }, (_, i) => anoProfessorPorMes[i + 1]?.length ?? 0),
+                        borderColor: '#072C9C',
+                        backgroundColor: 'rgba(32, 201, 151, .05)',
+                        fill: true,
+                        tension: .4,
+                        pointRadius: 3,
+                        pointHoverRadius: 6
+                    },
+                    {
+                        label: 'Módulo Merenda',
+                        data: Array.from({ length: 12 }, (_, i) => anoMerendaPorMes[i + 1]?.length ?? 0),
+                        borderColor: '#8E1300',
+                        backgroundColor: 'rgba(32, 201, 151, .05)',
+                        fill: true,
+                        tension: .4,
+                        pointRadius: 3,
+                        pointHoverRadius: 6
+                    },
+                    {
+                        label: 'Módulo Transporte',
+                        data: Array.from({ length: 12 }, (_, i) => anoTransportePorMes[i + 1]?.length ?? 0),
+                        borderColor: '#00613B',
+                        backgroundColor: 'rgba(32, 201, 151, .05)',
+                        fill: true,
+                        tension: .4,
+                        pointRadius: 3,
+                        pointHoverRadius: 6
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+
+                    legend: {
+                        position: 'bottom'
+                    }
+
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: '#f0f1f3'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
 
         $(".ultima-atualizado").html(new Date().toLocaleString('pt-BR').replace(',', ''));
     } catch(e) {
