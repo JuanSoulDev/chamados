@@ -701,7 +701,7 @@ async function listarQuantitativos() {
             .filter(q =>  q.categoria == "DESENVOLVIMENTO" && (q.finalizados_da_semana > 0 || q.abertos_da_semana > 0))
             .sort((a, b) => ((b.finalizados_da_semana + b.abertos_da_semana) - (a.finalizados_da_semana + a.abertos_da_semana)) || (b.finalizados_da_semana - a.finalizados_da_semana) || a.nome_usuario.localeCompare(b.nome_usuario));
  
-        if(!Defaults.requisitions) Chart.destroy(Defaults.quantitativos.pop().idx);
+        if(!Defaults.requisitions) Chart.destroy(Defaults.quantitativos.at(-1).idx);
 
         if(chamadosFinalizadosDaSemana.length) {
             new Chart(document.getElementById('chart-do-dia'), {
@@ -775,9 +775,14 @@ async function listarQuantitativos() {
         // QUANTITATIVOS
         $(".tabela-detalhamento-equipe tbody").empty();
         for (let eqp of [...suporte, ...programacao]) {
+            const eRita = eqp.nome_usuario == "Ritta Ramos";
+
             $(`#tabela-${(eqp.categoria).toLowerCase()} tbody`).append(`
-                <tr class="${eqp.usuario_ativo ? "" : "table-danger border"}">
-                    <td> ${eqp.usuario_ativo ? "" : "<span class='cursor-pointer caveira' onclick='ativarCaveira(this)'>💀</span>"} ${eqp.nome_usuario}</td>
+                <tr class="${eRita ? "table-warning border" : ""} ${eqp.usuario_ativo ? "" : "table-danger border"}">
+                    <td>
+                        ${eRita ? "<span class='cursor-pointer caveira' onclick='ativarCaveira(this)'>🤒</span>" : ""} 
+                        ${eqp.usuario_ativo ? "" : "<span class='cursor-pointer caveira' onclick='ativarCaveira(this)'>💀</span>"} 
+                        ${eqp.nome_usuario}</td>
                     <td class="text-center border">${eqp.acumulados}</td>
                     <td class="text-center border">${eqp.finalizados}</td>
                     <td class="text-center border">${eqp.abertos}</td>
