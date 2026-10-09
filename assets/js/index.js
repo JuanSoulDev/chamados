@@ -1,6 +1,7 @@
 const Defaults = {
     chamados: [],
     quantitativos: [],
+    titulos: [],
     mesAtual: (new Date()).getMonth() + 1,
     anoAtual: (new Date()).getFullYear(),
     requisitions: 0,
@@ -22,9 +23,15 @@ const Defaults = {
     qtdChamadosCriados: 0
 };
 
+const Tela = {
+    desabilitar: () => document.getElementById('bloqueio-tela').style.display = 'block',
+    habilitar: () => document.getElementById('bloqueio-tela').style.display = 'none',
+};
+
 $(document).ready(async function() {
     try {
         NProgress.start();
+        Tela.desabilitar();
 
         await Promise.all([
             listarAnos(),
@@ -87,6 +94,7 @@ $(document).ready(async function() {
         console.log(e);
     } finally {
         NProgress.done();
+        Tela.habilitar();
     }
 });
 
@@ -153,9 +161,9 @@ async function listarTitulos() {
 
         const params = { s: 1 };
 
-        const titulos = (await requisicaoPadrao(params)).p1;
+        Defaults.titulos = (await requisicaoPadrao(params)).p1;
 
-        titulos.map((t, i) => { select.append($("<option>", { value: t.id, text: t.title })); });
+        Defaults.titulos.map((t, i) => { select.append($("<option>", { value: t.id, text: t.title })); });
     } catch(e) {
         console.log(e);
     }
@@ -164,6 +172,7 @@ async function listarTitulos() {
 async function listarChamados() {
      try {
         NProgress.start();
+        Tela.desabilitar();
 
         const anoSelecionado = $("#ano-select").val();
         const mesSelecionado = $("#mes-select").val();
@@ -675,12 +684,14 @@ async function listarChamados() {
         console.log(e);
     } finally {
         NProgress.done();
+        Tela.habilitar();
     }
 }
 
 async function listarQuantitativos() {
      try {
         NProgress.start();
+        Tela.desabilitar();
 
         const anoSelecionado = $("#ano-select").val();
         const mesSelecionado = $("#mes-select").val();
@@ -809,6 +820,7 @@ async function listarQuantitativos() {
         console.log(e);
     } finally {
         NProgress.done();
+        Tela.habilitar();
     }
 }
 
@@ -888,6 +900,7 @@ function ativarCaveira(elemento) {
 async function listarChamadosUsuario(uId) {
      try {
         NProgress.start();
+        Tela.desabilitar();
 
         const params = { 
             s: 4,
@@ -900,5 +913,6 @@ async function listarChamadosUsuario(uId) {
         console.log(e);
     } finally {
         NProgress.done();
+        Tela.habilitar();
     }
 }

@@ -1,0 +1,469 @@
+/* ==========================================
+BOTÃO FLUTUANTE
+========================================== */
+
+.relatorios-fab {
+    position: fixed;
+    right: 25px;
+    bottom: 25px;
+    z-index: 1040;
+}
+
+.relatorios-fab__button {
+    width: 58px;
+    height: 58px;
+    border: 0;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+    color: #fff;
+    font-size: 23px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 25px rgba(13, 110, 253, .30);
+    transition: .2s ease;
+}
+
+.relatorios-fab__button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(13, 110, 253, .40);
+}
+
+
+/* ==========================================
+MODAL
+========================================== */
+
+.relatorios-modal {
+    border: 0;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .18);
+}
+
+
+/* ==========================================
+HEADER
+========================================== */
+
+.relatorios-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 22px;
+    background: #fff;
+    border-bottom: 1px solid #edf0f4;
+}
+
+.relatorios-header__icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #eaf2ff;
+    color: #0d6efd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.relatorios-header__title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #212529;
+    line-height: 1.2;
+}
+
+.relatorios-header__subtitle {
+    font-size: 13px;
+    color: #6c757d;
+    margin-top: 3px;
+}
+
+.relatorios-close {
+    margin-left: auto;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 10px;
+    background: #f5f6f8;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* ==========================================
+ÁREA DAS TELAS
+========================================== */
+
+.relatorios-body {
+    padding: 0;
+    background: #f8f9fb;
+    overflow: hidden;
+}
+
+.relatorios-container {
+    display: flex;
+    width: 200%;
+    transform: translateX(0);
+    transition: transform .4s cubic-bezier(.4, 0, .2, 1);
+}
+
+.relatorios-container.filtros-abertos {
+    transform: translateX(-50%);
+}
+
+.relatorios-tela {
+    width: 50%;
+    flex: 0 0 50%;
+    min-width: 50%;
+    box-sizing: border-box;
+}
+
+
+/* ==========================================
+TELA DE RELATÓRIOS
+========================================== */
+
+.relatorios-lista {
+    padding: 22px;
+}
+
+.relatorios-lista__topo {
+    margin-bottom: 16px;
+}
+
+.relatorios-lista__titulo {
+    font-size: 14px;
+    font-weight: 700;
+    color: #343a40;
+}
+
+.relatorios-lista__descricao {
+    font-size: 12px;
+    color: #868e96;
+    margin-top: 3px;
+}
+
+.relatorios-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.relatorios-card {
+    width: 100%;
+    min-height: 82px;
+    padding: 13px 14px;
+    border: 1px solid #e3e7ed;
+    border-radius: 14px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-align: left;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.relatorios-card:hover {
+    transform: translateY(-2px);
+    border-color: #b8d2ff;
+    box-shadow: 0 7px 20px rgba(13, 110, 253, .10);
+}
+
+.relatorios-card.selecionado {
+    border-color: #0d6efd;
+    background: #f7faff;
+    transform: scale(.98);
+}
+
+.relatorios-card__icon {
+    width: 43px;
+    height: 43px;
+    border-radius: 11px;
+    background: #eaf2ff;
+    color: #0d6efd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+    flex-shrink: 0;
+}
+
+.relatorios-card.selecionado .relatorios-card__icon {
+    background: #0d6efd;
+    color: #fff;
+}
+
+.relatorios-card__content {
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.relatorios-card__title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #212529;
+}
+
+.relatorios-card__description {
+    font-size: 11px;
+    color: #868e96;
+    margin-top: 3px;
+}
+
+.relatorios-card__arrow {
+    color: #adb5bd;
+    font-size: 13px;
+}
+
+
+/* ==========================================
+TELA DE FILTROS
+========================================== */
+
+.relatorios-filtros {
+    padding: 20px 22px 22px;
+}
+
+.relatorios-filtros__topo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.relatorios-voltar {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #e1e5ea;
+    border-radius: 10px;
+    background: #fff;
+    color: #495057;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.relatorios-filtros__relatorio {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.relatorios-filtros__icone {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: #eaf2ff;
+    color: #0d6efd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.relatorios-filtros__titulo {
+    font-size: 15px;
+    font-weight: 700;
+    color: #212529;
+}
+
+.relatorios-filtros__subtitulo {
+    font-size: 11px;
+    color: #868e96;
+    margin-top: 2px;
+}
+
+
+/* ==========================================
+PROGRESSO
+========================================== */
+
+.relatorios-progresso {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.relatorios-progresso__item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    color: #adb5bd;
+    white-space: nowrap;
+}
+
+.relatorios-progresso__numero {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.relatorios-progresso__item.ativo {
+    color: #0d6efd;
+    font-weight: 600;
+}
+
+.relatorios-progresso__item.ativo .relatorios-progresso__numero {
+    background: #0d6efd;
+    color: #fff;
+}
+
+.relatorios-progresso__linha {
+    height: 1px;
+    background: #dee2e6;
+    flex-grow: 1;
+    margin: 0 8px;
+}
+
+
+/* ==========================================
+BOX DOS FILTROS
+========================================== */
+
+.relatorios-filtros__box {
+    background: #fff;
+    border: 1px solid #e4e8ed;
+    border-radius: 14px;
+    padding: 17px;
+}
+
+.relatorios-filtros__box-titulo {
+    font-size: 13px;
+    font-weight: 700;
+    color: #343a40;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.relatorios-filtros__box-titulo i {
+    color: #0d6efd;
+}
+
+.relatorios-filtro {
+    margin-bottom: 14px;
+}
+
+.relatorios-filtro label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 6px;
+}
+
+.relatorios-filtro .form-select {
+    height: 38px;
+    font-size: 12px;
+    border-radius: 9px;
+    border-color: #dee2e6;
+}
+
+
+/* ==========================================
+FOOTER
+========================================== */
+
+.relatorios-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 22px;
+    background: #fff;
+    border-top: 1px solid #edf0f4;
+    font-size: 11px;
+    color: #868e96;
+}
+
+.relatorios-footer i {
+    color: #0d6efd;
+}
+
+.relatorios-footer__acao {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+}
+
+.relatorios-btn-voltar {
+    border: 1px solid #dee2e6;
+    background: #fff;
+    color: #495057;
+    border-radius: 9px;
+    padding: 8px 13px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.relatorios-btn-gerar {
+    border: 0;
+    background: #0d6efd;
+    color: #fff;
+    border-radius: 9px;
+    padding: 8px 15px;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+
+/* ==========================================
+MOBILE
+========================================== */
+
+@media (max-width: 576px) {
+
+    .relatorios-fab {
+        right: 16px;
+        bottom: 16px;
+    }
+
+    .relatorios-fab__button {
+        width: 52px;
+        height: 52px;
+    }
+
+    .relatorios-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .relatorios-lista,
+    .relatorios-filtros {
+        padding: 18px;
+    }
+
+    .relatorios-footer {
+        padding: 12px 18px;
+    }
+
+    .relatorios-footer__info {
+        display: none;
+    }
+
+    .relatorios-footer__acao {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .relatorios-btn-voltar,
+    .relatorios-btn-gerar {
+        flex: 1;
+        justify-content: center;
+    }
+}

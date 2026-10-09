@@ -13,604 +13,13 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-
-        :root {
-            --bg-page: #f4f6f9;
-            --card-radius: 16px;
-            --border-color: #e9ecef;
-
-            --primary: #4361ee;
-            --success: #20c997;
-            --warning: #f59f00;
-            --danger: #ef476f;
-            --info: #0dcaf0;
-            --dark: #212529;
-            --muted: #6c757d;
-        }
-
-        body {
-            background: var(--bg-page);
-            color: #212529;
-            font-family:
-                Inter,
-                -apple-system,
-                BlinkMacSystemFont,
-                "Segoe UI",
-                Roboto,
-                sans-serif;
-        }
-
-        /* =========================================================
-           CONTAINER
-        ========================================================= */
-
-        .dashboard-container {
-            margin: auto;
-            padding: 25px;
-        }
-
-        /* =========================================================
-           HEADER
-        ========================================================= */
-
-        .dashboard-header {
-            background: #fff;
-            border: 1px solid var(--border-color);
-            border-radius: var(--card-radius);
-            padding: 22px 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 3px 15px rgba(0, 0, 0, .03);
-        }
-
-        .dashboard-title {
-            font-size: 1.6rem;
-            font-weight: 700;
-            margin: 0;
-        }
-
-        .dashboard-subtitle {
-            color: var(--muted);
-            font-size: .9rem;
-            margin-top: 4px;
-        }
-
-        .status-online {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            background: #e9f9f2;
-            color: #198754;
-            padding: 7px 12px;
-            border-radius: 30px;
-            font-size: .8rem;
-            font-weight: 600;
-        }
-
-        .status-online::before {
-            content: "";
-            width: 8px;
-            height: 8px;
-            background: #20c997;
-            border-radius: 50%;
-            animation: pulse 1.8s infinite;
-        }
-
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(32, 201, 151, .5);
-            }
-
-            70% {
-                box-shadow: 0 0 0 7px rgba(32, 201, 151, 0);
-            }
-
-            100% {
-                box-shadow: 0 0 0 0 rgba(32, 201, 151, 0);
-            }
-        }
-
-        /* =========================================================
-           FILTROS
-        ========================================================= */
-
-        .filter-card {
-            background: #fff;
-            border: 1px solid var(--border-color);
-            border-radius: var(--card-radius);
-            padding: 18px 20px;
-            margin-bottom: 20px;
-        }
-
-        .filter-title {
-            font-size: .85rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: #6c757d;
-            letter-spacing: .5px;
-        }
-
-        .form-label {
-            font-size: .78rem;
-            font-weight: 600;
-            color: #6c757d;
-            margin-bottom: 5px;
-        }
-
-        .form-select {
-            border-radius: 10px;
-            border-color: #dee2e6;
-            min-height: 42px;
-        }
-
-        .form-select:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 .2rem rgba(67, 97, 238, .1);
-        }
-
-        .btn-refresh {
-            height: 42px;
-            border-radius: 10px;
-            padding: 0 17px;
-            background: var(--primary);
-            border: none;
-            color: white;
-        }
-
-        .btn-refresh:hover {
-            background: #304bd8;
-            color: white;
-        }
-
-        /* =========================================================
-           KPI CARDS
-        ========================================================= */
-
-        .kpi-card {
-            position: relative;
-            overflow: hidden;
-            background: #fff;
-            border: 1px solid var(--border-color);
-            border-radius: var(--card-radius);
-            padding: 20px;
-            height: 100%;
-            transition: all .25s ease;
-        }
-
-        .kpi-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, .07);
-        }
-
-        .kpi-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .kpi-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }
-
-        .kpi-primary .kpi-icon {
-            background: #eef1ff;
-            color: var(--primary);
-        }
-
-        .kpi-success .kpi-icon {
-            background: #e8faf4;
-            color: var(--success);
-        }
-
-        .kpi-warning .kpi-icon {
-            background: #fff6df;
-            color: var(--warning);
-        }
-
-        .kpi-info .kpi-icon {
-            background: #e5f9fd;
-            color: #0aa2c0;
-        }
-
-        .kpi-title {
-            color: var(--muted);
-            font-size: .78rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: .4px;
-        }
-
-        .kpi-number {
-            font-size: 2rem;
-            line-height: 1;
-            font-weight: 750;
-            margin-top: 14px;
-        }
-
-        .kpi-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 14px;
-            font-size: .78rem;
-        }
-
-        .kpi-period {
-            color: var(--muted);
-        }
-
-        .kpi-positive {
-            color: #198754;
-            font-weight: 600;
-        }
-
-        /* =========================================================
-           CARDS GERAIS
-        ========================================================= */
-
-        .dashboard-card {
-            background: #fff;
-            border: 1px solid var(--border-color);
-            border-radius: var(--card-radius);
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .dashboard-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 20px;
-            border-bottom: 1px solid #f0f1f3;
-        }
-
-        .dashboard-card-title {
-            font-size: .95rem;
-            font-weight: 700;
-            margin: 0;
-        }
-
-        .dashboard-card-subtitle {
-            color: var(--muted);
-            font-size: .75rem;
-            margin-top: 3px;
-        }
-
-        .dashboard-card-body {
-            padding: 20px;
-        }
-
-        /* =========================================================
-           CHARTS
-        ========================================================= */
-
-        .chart-container {
-            position: relative;
-            height: 300px;
-        }
-
-        .chart-container-small {
-            position: relative;
-            height: 260px;
-        }
-
-        /* =========================================================
-           PROGRESS
-        ========================================================= */
-
-        .progress {
-            height: 9px;
-            border-radius: 20px;
-            background: #eef0f3;
-        }
-
-        .progress-bar {
-            border-radius: 20px;
-        }
-
-        .performance-item {
-            margin-bottom: 18px;
-        }
-
-        .performance-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .performance-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 7px;
-            font-size: .82rem;
-        }
-
-        .performance-name {
-            font-weight: 600;
-        }
-
-        .performance-value {
-            color: var(--muted);
-        }
-
-        /* =========================================================
-           TEAM CARDS
-        ========================================================= */
-
-        .team-card {
-            background: #fff;
-            border: 1px solid var(--border-color);
-            border-radius: var(--card-radius);
-            padding: 20px;
-            height: 100%;
-        }
-
-        .team-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .team-icon {
-            width: 45px;
-            height: 45px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 21px;
-        }
-
-        .team-support .team-icon {
-            background: #eef1ff;
-            color: var(--primary);
-        }
-
-        .team-development .team-icon {
-            background: #e8faf4;
-            color: var(--success);
-        }
-
-        .team-title {
-            font-weight: 700;
-            margin: 0;
-        }
-
-        .team-subtitle {
-            color: var(--muted);
-            font-size: .78rem;
-        }
-
-        .team-stat {
-            margin-top: 22px;
-        }
-
-        .team-stat-number {
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-
-        .team-stat-label {
-            font-size: .75rem;
-            color: var(--muted);
-        }
-
-        /* =========================================================
-           TABELA
-        ========================================================= */
-
-        .table-wrapper {
-            overflow-x: auto;
-        }
-
-        .dashboard-table {
-            margin: 0;
-        }
-
-        .dashboard-table th {
-            font-size: .72rem;
-            text-transform: uppercase;
-            color: #6c757d;
-            font-weight: 700;
-            white-space: nowrap;
-            background: #fafbfc;
-            border-bottom: 1px solid #e9ecef;
-        }
-
-        .dashboard-table td {
-            font-size: .82rem;
-            vertical-align: middle;
-        }
-
-        .dashboard-table tbody tr {
-            transition: background .15s ease;
-        }
-
-        .dashboard-table tbody tr:hover {
-            background: #f8f9ff;
-        }
-
-        .table-footer {
-            background: #fafbfc;
-            font-weight: 700;
-        }
-
-        /* =========================================================
-           BADGES
-        ========================================================= */
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 5px 9px;
-            border-radius: 20px;
-            font-size: .7rem;
-            font-weight: 700;
-        }
-
-        .badge-success {
-            background: #e8faf4;
-            color: #198754;
-        }
-
-        .badge-warning {
-            background: #fff5db;
-            color: #a66b00;
-        }
-
-        .badge-info {
-            background: #e5f9fd;
-            color: #087990;
-        }
-
-        /* =========================================================
-           SECTION
-        ========================================================= */
-
-        .section-title {
-            font-size: 1rem;
-            font-weight: 700;
-            margin: 25px 0 12px;
-        }
-
-        /* =========================================================
-           FOOTER
-        ========================================================= */
-
-        footer {
-            color: #8a8f98;
-            font-size: .75rem;
-            padding: 25px 0 5px;
-        }
-
-        /* =========================================================
-           RESPONSIVO
-        ========================================================= */
-
-        @media (max-width: 768px) {
-
-            .dashboard-container {
-                padding: 12px;
-            }
-
-            .dashboard-title {
-                font-size: 1.3rem;
-            }
-
-            .dashboard-header {
-                padding: 18px;
-            }
-
-            .kpi-number {
-                font-size: 1.7rem;
-            }
-
-            .chart-container {
-                height: 250px;
-            }
-
-        }
-
-        /*CAVEIRA*/
-        <style>
-        .table-responsive {
-            overflow-x: auto;
-            overflow-y: visible !important;
-        }
-
-       .caveira, .coroa {
-            display: inline-block;
-            cursor: pointer;
-            transition: transform .2s ease
-            position: relative;
-        }
-
-        tr:hover .caveira{
-            animation: death 0.6s infinite;
-            filter: drop-shadow(0 0 6px red);
-        }
-
-        tr:hover .coroa{
-            animation: demise 0.6s infinite;
-            filter: drop-shadow(0 0 6px white);
-        }
-
-        @keyframes death {
-            0%   { transform: scale(1) rotate(0deg); }
-            15%  { transform: scale(1.3) rotate(-12deg); }
-            30%  { transform: scale(1.25) rotate(12deg); }
-            45%  { transform: scale(1.35) rotate(-10deg); }
-            60%  { transform: scale(1.25) rotate(10deg); }
-            75%  { transform: scale(1.3) rotate(-8deg); }
-            100% { transform: scale(1) rotate(0deg); }
-        }
-
-        @keyframes demise {
-            0%   { transform: scale(1) rotate(0deg); }
-            15%  { transform: scale(1.3) rotate(-12deg); }
-            30%  { transform: scale(1.25) rotate(12deg); }
-            45%  { transform: scale(1.35) rotate(-10deg); }
-            60%  { transform: scale(1.25) rotate(10deg); }
-            75%  { transform: scale(1.3) rotate(-8deg); }
-            100% { transform: scale(1) rotate(0deg); }
-        }
-
-        .ai{
-            position: absolute;
-            left: 50%;
-            top: 0;
-            transform: translateX(-50%);
-            color: #ff1500;
-            font-weight: bold;
-            pointer-events: none;
-            animation: subirAI .5s ease-out forwards;
-        }
-
-        @keyframes subirAI{
-            from{
-                transform: translate(-50%, 0);
-                opacity: 1;
-            }
-            to{
-                transform: translate(-50%, -40px);
-                opacity: 0;
-            }
-        }
-
-        #jumpscare {
-            position: fixed;
-            inset: 0;
-
-            width: 100vw;
-            height: 100vh;
-
-            object-fit: cover; /* cobre toda a tela */
-            object-position: center;
-
-            opacity: 0;
-            pointer-events: none;
-
-            z-index: 2147483647;
-        }
-
-        #jumpscare.mostrar {
-            animation: aparecerDesaparecer 2s ease forwards;
-        }
-
-        @keyframes aparecerDesaparecer {
-            0%   { opacity: 0; }
-            10%  { opacity: 1; }
-            90%  { opacity: 1; }
-            100% { opacity: 0; }
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/relatorio.css"/>
+    <link rel="stylesheet" href="assets/css/index.css"/>
 </head>
 
 <body>
+    <div id="bloqueio-tela"></div>
     <div class="dashboard-container">
         <!--CABEÇALHO-->
         <header class="dashboard-header">
@@ -978,6 +387,53 @@
                 </div>
             </div>
         </section>
+        
+        <div class="relatorios-fab">
+            <button type="button" class="relatorios-fab__button" data-bs-toggle="modal" data-bs-target="#modal-relatorio" title="Central de Relatórios" onclick="listarRelatorios()">
+                <i class="bi bi-bar-chart-line-fill"></i>
+            </button>
+        </div>
+        
+        <div class="modal fade" id="modal-relatorio" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content relatorios-modal">
+                    <div class="relatorios-header">
+                        <div class="relatorios-header__icon">
+                            <i class="bi bi-bar-chart-line-fill"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="relatorios-header__title">Central de Relatórios</div>
+                            <div class="relatorios-header__subtitle">Selecione um relatório para gerar</div>
+                        </div>
+                        <button type="button" class="relatorios-close" data-bs-dismiss="modal">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body relatorios-body">
+                        <div class="relatorios-container" id="relatoriosContainer">
+                            <div class="relatorios-tela">
+                                <div class="relatorios-lista">
+                                    <div class="relatorios-grid rel-titulos"></div>
+                                </div>
+                            </div>
+                            <div class="relatorios-tela">
+                                <div class="row rel-filtros"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relatorios-footer">
+                        <div id="alerta-relatorio" class="alert alert-warning py-2 mb-0 d-none" role="alert">
+                        </div>
+                        <div class="relatorios-footer__acao">
+                            <button type="button" class="relatorios-btn-voltar" data-bs-dismiss="modal">Fechar</button>
+                            <button type="button" class="relatorios-btn-gerar" onclick="gerarRelatoriosGerais()">
+                                Gerar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!--RODAPÉ-->
         <footer class="text-center">
@@ -992,8 +448,12 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js" integrity="sha512-dlPw+ytv/6JyepmelABrgeYgHI0O+frEwgfnPdXDTOIZz+eDgfW07QXG02/O8COfivBdGNINy+Vex+lYmJ5rxw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js" integrity="sha512-Qlv6VSKh1gDKGoJbnyA5RMXYcvnpIqhO++MhIM2fStMcGT9i2T//tSwYFlcyoRRDcDZ+TYHpH8azBBCyhpSeqw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="assets/js/main.js?v=<?php echo time(); ?>"></script>
     <script src="assets/js/index.js?v=<?php echo time(); ?>"></script>
+    <script src="assets/js/relatorio.js?v=<?php echo time(); ?>"></script>
 </body>
 
 </html>
